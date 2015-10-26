@@ -6,20 +6,20 @@ package com.example.cristian.mywallet;
 public class Gastos {
     private String concepto;
     private String descripcion;
-    private float cantidad;
+    private Float cantidad;
 
-    public Gastos(String con, String desc, float cant){
+    public Gastos(){
         this.concepto="";
         this.descripcion="";
-        this.cantidad=0;
+        this.cantidad= (float) 0.00;
     }
 
     public String getConcepto() {
-        return  this.concepto;
+        return this.concepto;
     }
 
     public String getDescripcion() {
-        return  this.descripcion;
+        return this.descripcion;
     }
 
     public float getCantidad() {
