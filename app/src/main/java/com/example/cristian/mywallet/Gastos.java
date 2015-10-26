@@ -6,7 +6,25 @@ package com.example.cristian.mywallet;
 public class Gastos {
     private String concepto;
     private String descripcion;
-    private int cantidad;
+    private float cantidad;
+
+    public Gastos(String con, String desc, float cant){
+        this.concepto="";
+        this.descripcion="";
+        this.cantidad=0;
+    }
+
+    public String getConcepto() {
+        return  this.concepto;
+    }
+
+    public String getDescripcion() {
+        return  this.descripcion;
+    }
+
+    public float getCantidad() {
+        return  this.cantidad;
+    }
 
     public void setConcepto(String concepto) {
         this.concepto = concepto;
@@ -16,25 +34,7 @@ public class Gastos {
         this.descripcion = descripcion;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(float cantidad) {
         this.cantidad = cantidad;
     }
-
-    public Gastos(){
-        this.concepto="";
-        this.descripcion="";
-        this.cantidad=0;
-    }
-
-    String getConcepto(){
-        return this.concepto;
-    }
-    String getDescripcion(){
-        return this.descripcion;
-    }
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
 }

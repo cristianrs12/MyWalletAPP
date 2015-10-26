@@ -4,12 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
+import com.example.cristian.mywallet.GastosList;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GastosActivity extends AppCompatActivity {
-    ArrayList<String> gastosList;
+    GastosList gastos;
     ListView listV;
 
     @Override
@@ -17,21 +16,14 @@ public class GastosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gastos);
 
+        //Get GastosList
+        gastos = new GastosList();
+
         // Register listView
         listV=(ListView) findViewById(R.id.listView);
-        gastosList = new ArrayList<String>();
-
-        // Fill list with content
-        gastosList.add("Gasto 1");
-        gastosList.add("Gasto 2");
-        gastosList.add("Gasto 3");
-        gastosList.add("Gasto 4");
-        gastosList.add("Gasto 5");
-        gastosList.add("Gasto 6");
-        gastosList.add("Gasto 7");
 
         // Create The Adapter with passing ArrayList as 3rd parameter
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, gastosList);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,R.layout.list_item,gastos.getListaGastos());
 
         // Set adapter to listView
         listV.setAdapter(arrayAdapter);

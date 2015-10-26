@@ -64,15 +64,7 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        // TODO: Emit LogCat message
-
-
-        // TODO:
-        // Update the appropriate count variable
-        // Update the user interface
-
-
+        //TODO: Emit logcat...
     }
 
     @Override
