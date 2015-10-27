@@ -1,5 +1,6 @@
 package com.example.cristian.mywallet;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.example.cristian.mywallet.Gastos;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
  * Created by Cristian on 20/10/2015.
  */
 public class GastosList {
+    static private final int GET_TEXT_REQUEST_CODE = 1;
     public ArrayList<Gastos> ListaGastos;
 
     public GastosList() {
@@ -61,7 +63,7 @@ public class GastosList {
     }
 
     //TODO: Añadir elementos a la lista
-    public void addElementoLista(){
-
+    public void addElementoLista(Gastos g){
+        this.ListaGastos.add(g);
     }
 }

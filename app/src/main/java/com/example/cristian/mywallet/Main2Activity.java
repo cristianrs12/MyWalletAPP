@@ -41,7 +41,7 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent (v.getContext(),GastosActivity.class);
+                Intent intent = new Intent (v.getContext(),AddGastosActivity.class);
                 // TODO - Start the chooser Activity, using the intent
                 startActivity(intent);
 
