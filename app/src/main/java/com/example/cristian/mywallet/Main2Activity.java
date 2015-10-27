@@ -14,10 +14,11 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main2);
         mUser= (TextView) findViewById(R.id.textView2);
         Bundle i = getIntent().getExtras();
-        if(!i.isEmpty()){
+        if(i != null){//TODO: Solucionar casos en los que se recibe un Intent
             mUser.setText(i.getString("USERID"));
         }
         // Declare and setup Explicit Activation button
@@ -127,6 +128,12 @@ public class Main2Activity extends AppCompatActivity {
         // Save state information with a collection of key-value pairs
         // 4 lines of code, one for every count variable
 
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
     }
 }

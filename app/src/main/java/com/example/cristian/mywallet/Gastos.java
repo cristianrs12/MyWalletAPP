@@ -1,9 +1,11 @@
 package com.example.cristian.mywallet;
 
+import java.io.Serializable;
+
 /**
  * Created by Cristian on 20/10/2015.
  */
-public class Gastos {
+public class Gastos implements Serializable{
     private String concepto;
     private String descripcion;
     private Float cantidad;
@@ -22,9 +24,7 @@ public class Gastos {
         return this.descripcion;
     }
 
-    public float getCantidad() {
-        return  this.cantidad;
-    }
+    public float getCantidad() { return  this.cantidad; }
 
     public void setConcepto(String concepto) {
         this.concepto = concepto;

@@ -18,18 +18,29 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        <activity android:name=".GastosActivity" >
+
+        <activity android:name=".GastosActivity"
+                  android:parentActivityName=".Main2Activity">
+            <!-- Declaramos que la activity acepta el ACTION:SEND para tipo de datos: Java-Serialized-Object -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="application/java-serialized-object"/>
+            </intent-filter>
         </activity>
-        <activity android:name=".AddGastosActivity" >
+
+        <activity android:name=".AddGastosActivity"
+                  android:parentActivityName=".GastosActivity">
         </activity>
+
     </application>
 </manifest>

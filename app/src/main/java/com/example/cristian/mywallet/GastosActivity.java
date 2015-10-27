@@ -23,6 +23,7 @@ public class GastosActivity extends AppCompatActivity {
 
         //Get GastosList
         gastos = new GastosList();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Register listView
        
@@ -43,30 +44,14 @@ public class GastosActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        // TODO: Emit LogCat message
-
-
-        // TODO:
-        // Update the appropriate count variable
-        // Update the user interface
-
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        // TODO: Emit LogCat message
-
-
-        // TODO:
         listV=(ListView) findViewById(R.id.listView);
-
         // Create The Adapter with passing ArrayList as 3rd parameter
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,R.layout.list_item,gastos.getListaGastos());
-
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.list_item,gastos.getListaGastos());
         // Set adapter to listView
         listV.setAdapter(arrayAdapter);
     }
@@ -74,80 +59,49 @@ public class GastosActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-
-        // TODO: Emit LogCat message
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // TODO: Emit LogCat message
-
     }
 
     @Override
     public void onRestart() {
         super.onRestart();
-
-        // TODO: Emit LogCat message
-
-
-        // TODO:
-        // Update the appropriate count variable
-        // Update the user interface
-
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        // TODO: Emit LogCat message
-
-
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        // TODO:
-        // Save state information with a collection of key-value pairs
-        // 4 lines of code, one for every count variable
-
-
+        // TODO: Save state information with a collection of key-value pairs
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Gastos g= new Gastos();
-
-        // TODO - Process the result only if this method received both a
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // RESULT_OK result code and a recognized request code
         // If so, update the Textview showing the user-entered text.
         if(requestCode == GET_TEXT_REQUEST_CODE){
             if(resultCode == RESULT_OK){ //COMPROBAR SI ESTA BIEN LO QUE HA LLEGADO
-               //datos a añadir
-                g.setCantidad(data.getIntExtra("Cantidad",0));
-                g.setConcepto(data.getStringExtra("Concepto"));
-                g.setDescripcion(data.getStringExtra("Descripcion"));
+                Gastos g = (Gastos) data.getSerializableExtra("GASTO");
+                Log.d("CONTENIDO RECIBIDO","Cantidad: " + g.getCantidad() + "\n" +
+                                           "Concepto: " + g.getConcepto() + "\n" +
+                                           "Descripcion: " + g.getDescripcion() + "\n\n");
                 this.gastos.addElementoLista(g);
                 refreshGastos();
             }
         }
-
     }
 
-    void refreshGastos(){
+    public void refreshGastos(){
         listV=(ListView) findViewById(R.id.listView);
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,R.layout.list_item,gastos.getListaGastos());
-
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.list_item,gastos.getListaGastos());
         // Set adapter to listView
         listV.setAdapter(arrayAdapter);
     }
-
 }
