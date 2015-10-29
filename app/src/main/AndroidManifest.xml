@@ -39,7 +39,7 @@
         </activity>
 
         <activity android:name=".AddGastosActivity"
-                  android:parentActivityName=".GastosActivity">
+                  android:parentActivityName=".Main2Activity">
         </activity>
 
     </application>
