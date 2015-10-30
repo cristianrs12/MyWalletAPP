@@ -22,4 +22,5 @@
 
     <!-- Strings related to gastos -->
     <string name="title_activity_gastos">Gastos</string>
+    <string name="logo">Logo</string>
 </resources>
