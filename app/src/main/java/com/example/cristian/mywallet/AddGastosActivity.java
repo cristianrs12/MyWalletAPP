@@ -3,6 +3,7 @@ package com.example.cristian.mywallet;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,25 +37,36 @@ public class AddGastosActivity extends AppCompatActivity {
 
     private void enterClicked() {
 
-        String concepto = "";
-        String descripcion = "";
-        int cant = 0;
+        Gastos g = new Gastos();
+        String concepto, descripcion;
+        int cant;
+
         concepto = mConcepto.getText().toString();
         descripcion = mDesc.getText().toString();
-        cant = Integer.parseInt(mCant.getText().toString());
 
-        Gastos g = new Gastos();
-        g.setCantidad(cant);
-        g.setConcepto(concepto);
-        g.setDescripcion(descripcion);
+        //Comprueba que el campo "Concepto" no esté vacio
+        if(concepto.isEmpty()){
+            mConcepto.setError("Concepto obligatorio");
+        //Comprueba que el campo "Descripcion" no esté vacio
+        } else if (descripcion.isEmpty()) {
+            mDesc.setError("Descripción obligatoria");
+        //Comprueba que el campo "Cantidad" no esté vacio
+        } else if(TextUtils.isEmpty(mCant.getText().toString())) {
+            mCant.setError("Cantidad obligatoria");
+        } else {
+            cant = Integer.parseInt(mCant.getText().toString());
 
-       /* Intent i = new Intent(this, GastosActivity.class);
+            g.setCantidad(cant);
+            g.setConcepto(concepto);
+            g.setDescripcion(descripcion);
 
-        setResult(RESULT_OK, i);
-        startActivity(i);*/
-        Intent i= new Intent();		//creamos un nuevo intent
-        i.putExtra("GASTO", g);
-        setResult(RESULT_OK,i);	//ponemos como resultado "CANCELED"
-        finish();
+            //Creamos un nuevo intent
+            Intent i= new Intent();
+            i.putExtra("GASTO", g);
+
+            //ponemos como resultado "SUCCEEDED", R_OK=-1
+            setResult(RESULT_OK, i);
+            finish();
+        }
     }
 }
