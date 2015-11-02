@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
+
 import com.example.cristian.mywallet.GastosList;
 import java.util.ArrayList;
 
@@ -15,7 +20,8 @@ public class GastosActivity extends AppCompatActivity {
     GastosList gastos;
     static private final int GET_TEXT_REQUEST_CODE = 1;
     ListView listV;
-
+    ShareActionProvider mShareActionProvider;
+    private static final int MENU_ADD = Menu.FIRST+1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +52,13 @@ public class GastosActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -97,6 +110,19 @@ public class GastosActivity extends AppCompatActivity {
             }
         }
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.addGasto:
+                Intent i=new Intent(getBaseContext(),AddGastosActivity.class);
+                startActivityForResult(i,GET_TEXT_REQUEST_CODE);
+                return true;
+            case R.id.action_settings:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public void refreshGastos(){
         listV=(ListView) findViewById(R.id.listView);
@@ -104,4 +130,5 @@ public class GastosActivity extends AppCompatActivity {
         // Set adapter to listView
         listV.setAdapter(arrayAdapter);
     }
+
 }

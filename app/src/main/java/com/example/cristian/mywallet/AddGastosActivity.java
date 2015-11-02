@@ -48,9 +48,13 @@ public class AddGastosActivity extends AppCompatActivity {
         g.setConcepto(concepto);
         g.setDescripcion(descripcion);
 
-        Intent i = new Intent(this, GastosActivity.class);
-        i.putExtra("GASTO", g);
+       /* Intent i = new Intent(this, GastosActivity.class);
+
         setResult(RESULT_OK, i);
-        startActivity(i);
+        startActivity(i);*/
+        Intent i= new Intent();		//creamos un nuevo intent
+        i.putExtra("GASTO", g);
+        setResult(RESULT_OK,i);	//ponemos como resultado "CANCELED"
+        finish();
     }
 }
