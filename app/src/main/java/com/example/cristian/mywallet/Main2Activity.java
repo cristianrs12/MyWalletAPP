@@ -3,9 +3,9 @@ package com.example.cristian.mywallet;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class Main2Activity extends AppCompatActivity {
@@ -14,55 +14,59 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main2);
-
         mUser= (TextView) findViewById(R.id.textView2);
         Bundle i = getIntent().getExtras();
+
         if(i != null){//TODO: Solucionar casos en los que se recibe un Intent
             mUser.setText(i.getString("USERID"));
         }
-        // Declare and setup Explicit Activation button
-        Button movements = (Button) findViewById(R.id.move);
-        movements.setOnClickListener(new View.OnClickListener() {
 
-            // Call startExplicitActivation() when pressed
+        // Retrieve the LinearLayout
+        View linear = findViewById(R.id.main2linear);
+
+        // Set the padding to match the Status Bar height
+        linear.setPadding(0, -getStatusBarHeight(), 0, 0);
+
+        CardView movements = (CardView) findViewById(R.id.card_view0);
+        CardView addMovements = (CardView) findViewById(R.id.card_view1);
+        CardView accounts = (CardView) findViewById(R.id.card_view2);
+
+        // Declare and setup Explicit Activation card
+        movements.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent (v.getContext(),GastosActivity.class);
-                // TODO - Start the chooser Activity, using the intent
                 startActivity(intent);
-
             }
         });
-        Button addMovements = (Button) findViewById(R.id.add);
         addMovements.setOnClickListener(new View.OnClickListener() {
-
-            // Call startExplicitActivation() when pressed
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent (v.getContext(),AddGastosActivity.class);
-                // TODO - Start the chooser Activity, using the intent
                 startActivity(intent);
-
             }
         });
-        Button acounts = (Button) findViewById(R.id.move);
-        acounts.setOnClickListener(new View.OnClickListener() {
 
-            // Call startExplicitActivation() when pressed
+        accounts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent (v.getContext(),GastosActivity.class);
-                // TODO - Start the chooser Activity, using the intent
                 startActivity(intent);
-
             }
         });
     }
+
+    //Find height of the status bar
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
