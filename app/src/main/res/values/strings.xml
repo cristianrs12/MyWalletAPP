@@ -26,6 +26,7 @@
     <string name="title_activity_gastos">Gastos</string>
     <string name="logo">Logo</string>
     <string name="mov_img_desc">MovementsImage</string>
+    <string name="lista_vacia">No hay gastos para mostrar</string>
     <string name="desc1">Ver movimientos</string>
     <string name="desc2">Añadir movimiento</string>
     <string name="text1">Aquí puedes ver una lista de los gastos que has registrado hasta ahora</string>

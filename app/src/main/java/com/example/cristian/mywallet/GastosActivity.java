@@ -1,6 +1,9 @@
 package com.example.cristian.mywallet;
 
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,40 +14,55 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ShareActionProvider;
-
-import com.example.cristian.mywallet.GastosList;
-import java.util.ArrayList;
+import android.widget.Toast;
 
 public class GastosActivity extends AppCompatActivity {
-    GastosList gastos;
+
     static private final int GET_TEXT_REQUEST_CODE = 1;
+
+    private WalletCursorAdapter walletAdapter ;
+    private WalletDBAdapter dbAdapter;
+    private Cursor cursor;
+
+    public static final String C_MODO  = "modo" ;
+    public static final int C_VISUALIZAR = 551 ;
+    public static final int C_CREAR = 552 ;
+
+    GastosList gastos;
     ListView listV;
-    ShareActionProvider mShareActionProvider;
-    private static final int MENU_ADD = Menu.FIRST+1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gastos);
+        listV=(ListView) findViewById(R.id.listView);
 
-        //Get GastosList
-        gastos = new GastosList();
+        dbAdapter = new WalletDBAdapter(this);
+        dbAdapter.abrir();
+        Toast.makeText(getBaseContext(), "Base de datos lista", Toast.LENGTH_LONG).show();
+        getDataDB();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Register listView
-       
-
-        // Register onClickListener to handle click events on each item
-        /*listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //TODO: Convertir lista en cards y hacer clickable cada una
+        listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //ItemClicked item = adapter.getItem(position);
-                //Intent intent = new Intent(Activity.this,destinationActivity.class);
-                //based on item add info to intent
-                //startActivity(intent);
+                Intent i = new Intent(GastosActivity.this, EditActivity.class);
+                i.putExtra(C_MODO, C_VISUALIZAR);
+                i.putExtra(WalletDBAdapter.C_ID, id);
+                startActivityForResult(i, C_VISUALIZAR);
             }
         });
-        */
+    }
+
+    private void getDataDB() {
+        cursor = dbAdapter.getCursor();
+        walletAdapter = new WalletCursorAdapter(this, cursor);
+        listV.setAdapter(walletAdapter);
+
+        // Switch to new cursor and update contents of ListView
+        // walletAdapter.changeCursor(newCursor);
     }
 
     @Override
@@ -59,14 +77,11 @@ public class GastosActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main, menu);
         return true;
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        listV=(ListView) findViewById(R.id.listView);
-        // Create The Adapter with passing ArrayList as 3rd parameter
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.list_item,gastos.getListaGastos());
-        // Set adapter to listView
-        listV.setAdapter(arrayAdapter);
+        getDataDB();
     }
 
     @Override
@@ -92,24 +107,23 @@ public class GastosActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        // TODO: Save state information with a collection of key-value pairs
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // RESULT_OK result code and a recognized request code
-        // If so, update the Textview showing the user-entered text.
         if(requestCode == GET_TEXT_REQUEST_CODE){
-            if(resultCode == RESULT_OK){ //COMPROBAR SI ESTA BIEN LO QUE HA LLEGADO
-                Gastos g = (Gastos) data.getSerializableExtra("GASTO");
+            if(resultCode == RESULT_OK){
+               /* Gastos g = (Gastos) data.getSerializableExtra("GASTO");
                 Log.d("CONTENIDO RECIBIDO","Cantidad: " + g.getCantidad() + "\n" +
                                            "Concepto: " + g.getConcepto() + "\n" +
                                            "Descripcion: " + g.getDescripcion() + "\n\n");
                 this.gastos.addElementoLista(g);
-                refreshGastos();
+                refreshGastos();*/
             }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -125,10 +139,8 @@ public class GastosActivity extends AppCompatActivity {
     }
 
     public void refreshGastos(){
-        listV=(ListView) findViewById(R.id.listView);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.list_item,gastos.getListaGastos());
         // Set adapter to listView
         listV.setAdapter(arrayAdapter);
     }
-
 }

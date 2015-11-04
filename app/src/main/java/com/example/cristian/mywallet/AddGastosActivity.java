@@ -1,12 +1,15 @@
 package com.example.cristian.mywallet;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.Serializable;
 
@@ -15,6 +18,9 @@ public class AddGastosActivity extends AppCompatActivity {
     EditText mConcepto;
     EditText mDesc;
     EditText mCant;
+
+    private WalletDBAdapter dbAdapter;
+    private Cursor cursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +32,13 @@ public class AddGastosActivity extends AppCompatActivity {
 
         Button enterButton = (Button) findViewById(R.id.add);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        enterButton.setOnClickListener(new View.OnClickListener() {
 
+        // Creamos el adaptador
+        dbAdapter = new WalletDBAdapter(this);
+        dbAdapter.abrir();
+
+        // Definimos la accion para el boton
+        enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enterClicked();
@@ -56,13 +67,23 @@ public class AddGastosActivity extends AppCompatActivity {
         } else {
             cant = Integer.parseInt(mCant.getText().toString());
 
-            g.setCantidad(cant);
-            g.setConcepto(concepto);
-            g.setDescripcion(descripcion);
+            // Añadimos los datos del formulario
+            ContentValues reg = new ContentValues();
+            reg.put(WalletDBAdapter.C_CONCEPTO, concepto);
+            reg.put(WalletDBAdapter.C_DESCRIPCION, descripcion);
+            reg.put(WalletDBAdapter.C_CANTIDAD, cant);
+            reg.put(WalletDBAdapter.C_LOCALIZACION, "");
 
-            //Creamos un nuevo intent
+            dbAdapter.insert(reg);
+            Toast.makeText(AddGastosActivity.this, "Gasto añadido correctamente", Toast.LENGTH_SHORT).show();
+
+//            g.setCantidad(cant);
+//            g.setConcepto(concepto);
+//            g.setDescripcion(descripcion);
+//
+//            //Creamos un nuevo intent
             Intent i= new Intent();
-            i.putExtra("GASTO", g);
+//            i.putExtra("GASTO", g);
 
             //ponemos como resultado "SUCCEEDED", R_OK=-1
             setResult(RESULT_OK, i);

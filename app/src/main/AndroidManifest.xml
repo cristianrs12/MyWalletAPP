@@ -41,5 +41,9 @@
         <activity android:name=".AddGastosActivity"
                   android:parentActivityName=".Main2Activity">
         </activity>
+
+        <activity android:name=".EditActivity"
+            android:parentActivityName=".GastosActivity">
+        </activity>
     </application>
 </manifest>

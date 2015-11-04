@@ -1,12 +1,13 @@
 package com.example.cristian.mywallet;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -21,12 +22,6 @@ public class Main2Activity extends AppCompatActivity {
         if(i != null){//TODO: Solucionar casos en los que se recibe un Intent
             mUser.setText(i.getString("USERID"));
         }
-
-        // Retrieve the LinearLayout
-        View linear = findViewById(R.id.main2linear);
-
-        // Set the padding to match the Status Bar height
-        linear.setPadding(0, -getStatusBarHeight(), 0, 0);
 
         CardView movements = (CardView) findViewById(R.id.card_view0);
         CardView addMovements = (CardView) findViewById(R.id.card_view1);
@@ -47,24 +42,13 @@ public class Main2Activity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         accounts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (v.getContext(),GastosActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent (v.getContext(),GastosActivity.class);
+                //startActivity(intent);
             }
         });
-    }
-
-    //Find height of the status bar
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
     }
 
     @Override
