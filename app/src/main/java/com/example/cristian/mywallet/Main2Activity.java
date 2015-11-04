@@ -23,9 +23,9 @@ public class Main2Activity extends AppCompatActivity {
             mUser.setText(i.getString("USERID"));
         }
 
-        CardView movements = (CardView) findViewById(R.id.card_view0);
+        CardView movements    = (CardView) findViewById(R.id.card_view0);
         CardView addMovements = (CardView) findViewById(R.id.card_view1);
-        CardView accounts = (CardView) findViewById(R.id.card_view2);
+        CardView accounts     = (CardView) findViewById(R.id.card_view2);
 
         // Declare and setup Explicit Activation card
         movements.setOnClickListener(new View.OnClickListener(){
@@ -52,54 +52,19 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        //TODO: Emit logcat...
-    }
+    public void onStart() {super.onStart();}
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        // TODO: Emit LogCat message
-
-
-        // TODO:
-        // Update the appropriate count variable
-        // Update the user interface
-
-
-    }
+    public void onResume() {super.onResume();}
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        // TODO: Emit LogCat message
-
-    }
+    public void onPause() {super.onPause();}
 
     @Override
-    public void onStop() {
-        super.onStop();
-
-        // TODO: Emit LogCat message
-
-    }
+    public void onStop() {super.onStop();}
 
     @Override
-    public void onRestart() {
-        super.onRestart();
-
-        // TODO: Emit LogCat message
-
-
-        // TODO:
-        // Update the appropriate count variable
-        // Update the user interface
-
-
-    }
+    public void onRestart() {super.onRestart();}
 
     @Override
     public void onDestroy() {

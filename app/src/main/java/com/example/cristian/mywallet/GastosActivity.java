@@ -39,12 +39,13 @@ public class GastosActivity extends AppCompatActivity {
 
         dbAdapter = new WalletDBAdapter(this);
         dbAdapter.abrir();
+
         Toast.makeText(getBaseContext(), "Base de datos lista", Toast.LENGTH_LONG).show();
         getDataDB();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //TODO: Convertir lista en cards y hacer clickable cada una
+        //TODO: Convertir lista en cards
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -60,15 +61,10 @@ public class GastosActivity extends AppCompatActivity {
         cursor = dbAdapter.getCursor();
         walletAdapter = new WalletCursorAdapter(this, cursor);
         listV.setAdapter(walletAdapter);
-
-        // Switch to new cursor and update contents of ListView
-        // walletAdapter.changeCursor(newCursor);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
+    public void onStart() {super.onStart();}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,14 +91,10 @@ public class GastosActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestart() {
-        super.onRestart();
-    }
+    public void onRestart() {super.onRestart();}
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+    public void onDestroy() {super.onDestroy();}
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -114,12 +106,6 @@ public class GastosActivity extends AppCompatActivity {
         // RESULT_OK result code and a recognized request code
         if(requestCode == GET_TEXT_REQUEST_CODE){
             if(resultCode == RESULT_OK){
-               /* Gastos g = (Gastos) data.getSerializableExtra("GASTO");
-                Log.d("CONTENIDO RECIBIDO","Cantidad: " + g.getCantidad() + "\n" +
-                                           "Concepto: " + g.getConcepto() + "\n" +
-                                           "Descripcion: " + g.getDescripcion() + "\n\n");
-                this.gastos.addElementoLista(g);
-                refreshGastos();*/
             }
         }
     }
@@ -136,11 +122,5 @@ public class GastosActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public void refreshGastos(){
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,R.layout.list_item,gastos.getListaGastos());
-        // Set adapter to listView
-        listV.setAdapter(arrayAdapter);
     }
 }

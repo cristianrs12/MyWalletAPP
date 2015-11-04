@@ -19,9 +19,7 @@ public class WalletCursorAdapter extends CursorAdapter
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor)
-    {
-        //TODO: Formatear contenido List Item
+    public void bindView(View view, Context context, Cursor cursor) {
         TextView tv = (TextView) view ;
         tv.setText("Concepto: "+
                    cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO))+"\n"+

@@ -32,4 +32,7 @@
     <string name="text1">Aquí puedes ver una lista de los gastos que has registrado hasta ahora</string>
     <string name="text2">Añade un nuevo gasto a tu cuenta para registrarlo</string>
     <string name="wp_thum_c0">wp_thumb_desc_c0</string>
+    <string name="ok_eliminar">Eliminando gasto</string>
+    <string name="text_eliminar">Se va a eliminar este elemento,\n
+                                 ¿Desea continuar?</string>
 </resources>

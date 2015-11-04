@@ -52,7 +52,6 @@ public class WalletDBAdapter {
         return c;
     }
 
-
     // Inserta los valores en un registro de la tabla
     public long insert(ContentValues reg) {
         if (db == null)
@@ -61,8 +60,7 @@ public class WalletDBAdapter {
     }
 
     // Modificar el registro
-    public long update(ContentValues reg)
-    {
+    public long update(ContentValues reg) {
         long result = 0;
         if (db == null) abrir();
         if (reg.containsKey(C_ID)) {
@@ -73,6 +71,14 @@ public class WalletDBAdapter {
             result = db.update(N_TABLA, reg, "_id=" + id, null);
         }
         return result;
+    }
+
+    /**
+     * Eliminar el registro con el identificador indicado
+     */
+    public long delete(long id){
+        if (db == null) abrir();
+        return db.delete(N_TABLA, "_id=" + id, null);
     }
 
     // Devuelve cursor con todos las columnas del registro

@@ -5,10 +5,11 @@
     android:paddingTop="10dp">
 
     <RelativeLayout
+        android:id="@+id/editLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="10dp" >
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/label_concepto"
@@ -59,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/label_cantidad"
-            android:ems="10">
+            android:ems="10"
+            android:inputType="number">
         </EditText>
 
         <TextView
@@ -78,7 +80,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/label_location"
             android:ems="10"
-            android:inputType="phone" >
+            android:inputType="time" >
         </EditText>
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/edit_buttons"

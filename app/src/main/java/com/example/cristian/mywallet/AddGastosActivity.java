@@ -48,7 +48,6 @@ public class AddGastosActivity extends AppCompatActivity {
 
     private void enterClicked() {
 
-        Gastos g = new Gastos();
         String concepto, descripcion;
         int cant;
 
@@ -77,15 +76,7 @@ public class AddGastosActivity extends AppCompatActivity {
             dbAdapter.insert(reg);
             Toast.makeText(AddGastosActivity.this, "Gasto añadido correctamente", Toast.LENGTH_SHORT).show();
 
-//            g.setCantidad(cant);
-//            g.setConcepto(concepto);
-//            g.setDescripcion(descripcion);
-//
-//            //Creamos un nuevo intent
             Intent i= new Intent();
-//            i.putExtra("GASTO", g);
-
-            //ponemos como resultado "SUCCEEDED", R_OK=-1
             setResult(RESULT_OK, i);
             finish();
         }
