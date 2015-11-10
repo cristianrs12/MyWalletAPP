@@ -7,11 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddGastosActivity extends AppCompatActivity {
 
@@ -21,6 +25,7 @@ public class AddGastosActivity extends AppCompatActivity {
 
     private WalletDBAdapter dbAdapter;
     private Cursor cursor;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +34,9 @@ public class AddGastosActivity extends AppCompatActivity {
         mConcepto = (EditText) findViewById(R.id.concepto);
         mCant = (EditText) findViewById(R.id.cantidad);
         mDesc = (EditText) findViewById(R.id.desc);
-
+        spinner = (Spinner) findViewById(R.id.spinner);
         Button enterButton = (Button) findViewById(R.id.add);
+        DatosPorDefecto();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Creamos el adaptador
@@ -44,6 +50,19 @@ public class AddGastosActivity extends AppCompatActivity {
                 enterClicked();
             }
         });
+    }
+
+    private void DatosPorDefecto() {
+        List lista = new ArrayList<String>();
+        lista.add("Comida");
+        lista.add("Otros");
+        lista.add("Lujos");
+        lista.add("Básicos");
+        lista.add("Caprichos");
+        lista.add("Transporte");
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista);
+        adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adaptador);
     }
 
     private void enterClicked() {

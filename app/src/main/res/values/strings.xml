@@ -35,4 +35,5 @@
     <string name="ok_eliminar">Eliminando gasto</string>
     <string name="text_eliminar">Se va a eliminar este elemento,\n
                                  ¿Desea continuar?</string>
+
 </resources>

@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.cristian.mywallet.GastosActivity">
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/presupuesto" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -20,4 +25,5 @@
             android:layout_height="wrap_content"
             android:text="@string/lista_vacia" />
     </LinearLayout>
+
 </RelativeLayout>

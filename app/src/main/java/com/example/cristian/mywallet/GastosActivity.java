@@ -1,9 +1,13 @@
 package com.example.cristian.mywallet;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GastosActivity extends AppCompatActivity {
@@ -22,7 +28,9 @@ public class GastosActivity extends AppCompatActivity {
 
     private WalletCursorAdapter walletAdapter ;
     private WalletDBAdapter dbAdapter;
-    private Cursor cursor;
+    private Cursor cursor, cursor2;
+
+
 
     public static final String C_MODO  = "modo" ;
     public static final int C_VISUALIZAR = 551 ;
@@ -30,20 +38,25 @@ public class GastosActivity extends AppCompatActivity {
 
     GastosList gastos;
     ListView listV;
+    TextView presupuesto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gastos);
         listV=(ListView) findViewById(R.id.listView);
+        presupuesto=(TextView) findViewById(R.id.presupuesto);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbAdapter = new WalletDBAdapter(this);
         dbAdapter.abrir();
+        //getPresup();
+
 
         Toast.makeText(getBaseContext(), "Base de datos lista", Toast.LENGTH_LONG).show();
         getDataDB();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         //TODO: Convertir lista en cards
         listV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -55,6 +68,18 @@ public class GastosActivity extends AppCompatActivity {
                 startActivityForResult(i, C_VISUALIZAR);
             }
         });
+    }
+
+
+
+    private void getPresup(){
+        cursor2 = dbAdapter.getPresupuesto();
+        if(cursor2.isNull(cursor2.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO))){
+            Intent i = new Intent(GastosActivity.this, PrepActivity.class);
+            startActivityForResult(i,GET_TEXT_REQUEST_CODE);
+        }else{
+            presupuesto.setText(cursor2.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
+        }
     }
 
     private void getDataDB() {
@@ -78,6 +103,7 @@ public class GastosActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         getDataDB();
+       // getPresup();
     }
 
     @Override

@@ -10,10 +10,16 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditActivity extends Activity {
 
@@ -28,6 +34,7 @@ public class EditActivity extends Activity {
 
     // Elementos de la vista
     EditText mConcepto, mDescripcion, mCantidad, mLocation;
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +45,10 @@ public class EditActivity extends Activity {
         save = (Button) findViewById(R.id.boton_guardar);
         del = (Button) findViewById(R.id.boton_borrar);
         cancel = (Button) findViewById(R.id.boton_cancelar);
-
+        spinner = (Spinner) findViewById(R.id.spinner);
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();
-
+        DatosPorDefecto();
         if (extra == null) return;
 
         // Obtenemos los elementos de la vista
@@ -80,6 +87,19 @@ public class EditActivity extends Activity {
         });
     }
 
+    private void DatosPorDefecto() {
+        List lista = new ArrayList<String>();
+        lista.add("Comida");
+        lista.add("Otros");
+        lista.add("Lujos");
+        lista.add("Básicos");
+        lista.add("Caprichos");
+        lista.add("Transporte");
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista);
+        adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adaptador);
+    }
+
     private void consultar(long id){
         // Consultamos el centro por el identificador
         this.cursor = dbAdapter.getRegistro(id);
@@ -111,7 +131,8 @@ public class EditActivity extends Activity {
     }
 
     private void guardarCambios() {
-        String concepto, descripcion;
+        final String concepto, descripcion;
+        final String categoria;
         int cant;
         long id;
 
@@ -126,25 +147,41 @@ public class EditActivity extends Activity {
         } else if (descripcion.isEmpty()) {
             mDescripcion.setError("Descripción obligatoria");
         //Comprueba que el campo "Cantidad" no esté vacio
-        } else if(TextUtils.isEmpty(mCantidad.getText().toString())) {
-            mCantidad.setError("Cantidad obligatoria");
         } else {
-            cant = Integer.parseInt(mCantidad.getText().toString());
+            if (TextUtils.isEmpty(mCantidad.getText().toString())) {
+                mCantidad.setError("Cantidad obligatoria");
+            } else {
+                cant = Integer.parseInt(mCantidad.getText().toString());
+                final int[] pos = new int[1];
+                spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                        Toast.makeText(arg0.getContext(), "Seleccionado: " + arg0.getItemAtPosition(arg2).toString(), Toast.LENGTH_SHORT).show();
+                        pos[0] = arg2;
+                    }
 
-            // Añadimos los datos del formulario
-            ContentValues reg = new ContentValues();
-            reg.put(WalletDBAdapter.C_ID, id);
-            reg.put(WalletDBAdapter.C_CONCEPTO, concepto);
-            reg.put(WalletDBAdapter.C_DESCRIPCION, descripcion);
-            reg.put(WalletDBAdapter.C_CANTIDAD, cant);
-            reg.put(WalletDBAdapter.C_LOCALIZACION, "");
+                    @Override
+                    public void onNothingSelected(AdapterView<?> arg0) {
+                    }
+                });
+                categoria = (String) spinner.getItemAtPosition(pos[0]);
 
-            dbAdapter.update(reg);
-            Toast.makeText(EditActivity.this, "Gasto modificado correctamente", Toast.LENGTH_SHORT).show();
 
-            Intent i= new Intent();
-            setResult(RESULT_OK, i);
-            finish();
+                // Añadimos los datos del formulario
+                ContentValues reg = new ContentValues();
+                reg.put(WalletDBAdapter.C_ID, id);
+                reg.put(WalletDBAdapter.C_CONCEPTO, concepto);
+                reg.put(WalletDBAdapter.C_DESCRIPCION, descripcion);
+                reg.put(WalletDBAdapter.C_CANTIDAD, cant);
+                reg.put(WalletDBAdapter.C_LOCALIZACION, "");
+                reg.put(WalletDBAdapter.C_CATEGORIA, categoria);
+                dbAdapter.update(reg);
+                Toast.makeText(EditActivity.this, "Gasto modificado correctamente", Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent();
+                setResult(RESULT_OK, i);
+                finish();
+            }
         }
     }
 

@@ -14,18 +14,26 @@ public class WalletDBAdapter {
 
     //Nombre y columnas de la tabla
     public static final String N_TABLA = "GASTOS" ;
+    public static final String N_TABLA2 = "PRESUPUESTOS";
     public static final String C_ID           = "_id";
     public static final String C_CONCEPTO     = "gasto_concepto";
     public static final String C_DESCRIPCION  = "gasto_descripcion";
     public static final String C_CANTIDAD     = "gasto_cantidad";
     public static final String C_LOCALIZACION = "gasto_localizacion";
+    public static final String C_PRESUPUESTO = "presupuesto";
+    public static final String C_CATEGORIA = "categoria";
+
 
     //Lista de columnas de la tabla
     private String[] columnas = new String[]{C_ID,
                                              C_CONCEPTO,
                                              C_DESCRIPCION,
                                              C_CANTIDAD,
-                                             C_LOCALIZACION};
+                                             C_LOCALIZACION,
+                                            C_CATEGORIA};
+    private String[] columnas2 = new String[]{C_ID,
+                                              C_PRESUPUESTO};
+
     private Context context;
     private WalletDBHelper dbHelper;
     private SQLiteDatabase db;
@@ -49,6 +57,11 @@ public class WalletDBAdapter {
     // Devuelve cursor con todos las columnas de la tabla
     public Cursor getCursor() throws SQLException {
         Cursor c = db.query( true, N_TABLA, columnas, null, null, null, null, null, null);
+        return c;
+    }
+
+    public Cursor getPresupuesto() throws SQLException {
+        Cursor c = db.query( true, N_TABLA2, columnas2, null, null, null, null, null, null);
         return c;
     }
 

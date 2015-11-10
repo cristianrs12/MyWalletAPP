@@ -28,7 +28,9 @@ public class WalletCursorAdapter extends CursorAdapter
                    "Cantidad: "+
                    cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CANTIDAD))+"\n"+
                    "Localización: "+
-                   cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION)));
+                   cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION))+"\n"+
+                    "Categoria: "+
+                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CATEGORIA)));
     }
 
     @Override

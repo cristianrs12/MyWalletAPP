@@ -82,11 +82,27 @@
             android:ems="10"
             android:inputType="time" >
         </EditText>
+
+        <TextView
+            android:id="@+id/label_categoria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categoria"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_below="@+id/edit_location"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/label_categoria"
+            android:id="@+id/spinner" />
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/edit_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/edit_location"
+            android:layout_below="@id/spinner"
             android:gravity="center"
             android:layout_marginTop="30dp"
             android:orientation="horizontal" >
@@ -111,5 +127,6 @@
                 android:text="Cancelar"
                 android:layout_marginLeft="20dp" />
         </LinearLayout>
+
     </RelativeLayout>
 </ScrollView>
