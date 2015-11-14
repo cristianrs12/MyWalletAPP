@@ -55,11 +55,12 @@ public class AddGastosActivity extends AppCompatActivity {
     private void DatosPorDefecto() {
         List lista = new ArrayList<String>();
         lista.add("Comida");
-        lista.add("Otros");
         lista.add("Lujos");
         lista.add("Básicos");
         lista.add("Caprichos");
+        lista.add("Mensual");
         lista.add("Transporte");
+        lista.add("Otros");
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista);
         adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adaptador);
@@ -67,7 +68,7 @@ public class AddGastosActivity extends AppCompatActivity {
 
     private void enterClicked() {
 
-        String concepto, descripcion;
+        String categoria, concepto, descripcion;
         int cant;
 
         concepto = mConcepto.getText().toString();
@@ -84,13 +85,14 @@ public class AddGastosActivity extends AppCompatActivity {
             mCant.setError("Cantidad obligatoria");
         } else {
             cant = Integer.parseInt(mCant.getText().toString());
-
+            categoria = spinner.getSelectedItem().toString();
             // Añadimos los datos del formulario
             ContentValues reg = new ContentValues();
             reg.put(WalletDBAdapter.C_CONCEPTO, concepto);
             reg.put(WalletDBAdapter.C_DESCRIPCION, descripcion);
             reg.put(WalletDBAdapter.C_CANTIDAD, cant);
             reg.put(WalletDBAdapter.C_LOCALIZACION, "");
+            reg.put(WalletDBAdapter.C_CATEGORIA,categoria);
 
             dbAdapter.insert(reg);
             Toast.makeText(AddGastosActivity.this, "Gasto añadido correctamente", Toast.LENGTH_SHORT).show();

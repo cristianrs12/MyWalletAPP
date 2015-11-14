@@ -90,11 +90,12 @@ public class EditActivity extends Activity {
     private void DatosPorDefecto() {
         List lista = new ArrayList<String>();
         lista.add("Comida");
-        lista.add("Otros");
         lista.add("Lujos");
         lista.add("Básicos");
         lista.add("Caprichos");
+        lista.add("Mensual");
         lista.add("Transporte");
+        lista.add("Otros");
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista);
         adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adaptador);
@@ -152,7 +153,7 @@ public class EditActivity extends Activity {
                 mCantidad.setError("Cantidad obligatoria");
             } else {
                 cant = Integer.parseInt(mCantidad.getText().toString());
-                final int[] pos = new int[1];
+                /*final int[] pos = new int[1];
                 spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -163,8 +164,8 @@ public class EditActivity extends Activity {
                     @Override
                     public void onNothingSelected(AdapterView<?> arg0) {
                     }
-                });
-                categoria = (String) spinner.getItemAtPosition(pos[0]);
+                });*/
+                categoria = spinner.getSelectedItem().toString();
 
 
                 // Añadimos los datos del formulario
