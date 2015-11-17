@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/main2linear"
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         tools:context="com.example.cristian.mywallet.Main2Activity">
 
         <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -71,17 +71,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/thumbnail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <com.jjoe64.graphview.GraphView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_alignParentBottom="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/w_card_money_euro"
-                    android:contentDescription="@string/wp_thum_c0"
-                    android:layout_alignParentLeft="false"
-                    android:layout_alignParentStart="false"
-                    android:layout_alignParentEnd="false" />
+                    android:id="@+id/graph2"
+                    android:background="#7d3c3f41"
+                    android:clickable="true" />
 
                 <TextView
                     android:id="@+id/title_c1"
@@ -90,10 +86,10 @@
                     android:maxLines="3"
                     android:paddingLeft="8sp"
                     android:paddingTop="70sp"
-                    android:text="@string/desc2"
                     android:textColor="#fff"
                     android:textStyle="bold"
-                    android:textSize="22sp" />
+                    android:textSize="22sp"
+                    android:text="Informe de gastos" />
 
                 <TextView
                     android:id="@+id/desc_c1"
@@ -102,9 +98,9 @@
                     android:layout_below="@+id/title_c1"
                     android:maxLines="3"
                     android:padding="8dp"
-                    android:text="@string/text2"
                     android:textColor="#fff"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:text="Consulta las gráficas de gastos para ver el avance de tu presupuesto" />
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>

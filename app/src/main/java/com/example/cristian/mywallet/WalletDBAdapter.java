@@ -64,6 +64,7 @@ public class WalletDBAdapter {
         if (c != null) c.moveToFirst();
         return c;
     }
+
     public long updatePrep(ContentValues reg){
         long result = 0;
         if (db == null) abrir();

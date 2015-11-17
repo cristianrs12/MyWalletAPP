@@ -14,10 +14,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-
 public class GastosActivity extends AppCompatActivity {
 
     static private final int GET_TEXT_REQUEST_CODE = 1;
@@ -99,7 +95,7 @@ public class GastosActivity extends AppCompatActivity {
     private void updatePres(){
         double presupuesto=0;
         double disponible=0;
-        presupuesto=Constants.presupuesto;
+        presupuesto = Constants.presupuesto;
         disponible = Constants.disponible;
         presu.setText("Presupuesto: "+Double.toString(presupuesto)+"€ - Disponible: " + Double.toString(disponible) + "€" );
     }
