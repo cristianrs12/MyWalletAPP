@@ -18,6 +18,11 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
+        </activity>
+
+        <activity
+            android:name=".Main2Activity"
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,15 +30,8 @@
         </activity>
 
         <activity
-            android:name=".Main2Activity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-
-        <activity
             android:name=".GastosActivity"
             android:parentActivityName=".Main2Activity" >
-
             <!-- Declaramos que la activity acepta el ACTION:SEND para tipo de datos: Java-Serialized-Object -->
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -59,13 +57,11 @@
 
         <activity
             android:name=".LocationActivity"
-            android:parentActivityName=".GastosActivity">
+            android:parentActivityName=".Main2Activity">
         </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-
         </application>
 </manifest>

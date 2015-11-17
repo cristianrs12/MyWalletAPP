@@ -17,22 +17,20 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:layout_margin="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:clickable="true">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:clickable="true">
 
-                <ImageView
-                    android:id="@+id/thumbnail0"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <com.jjoe64.graphview.GraphView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
                     android:layout_alignParentBottom="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/w_card_chart"
-                    android:contentDescription="@string/wp_thum_c0" />
+                    android:id="@+id/graph"
+                    android:background="#7d3c3f41"
+                    android:clickable="true" />
 
                 <TextView
                     android:id="@+id/title_c0"
@@ -121,14 +119,6 @@
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="90dp"
-                android:id="@+id/imageView2"
-                android:contentDescription="@string/mov_img_desc"
-                android:background="#84b550" />
 
             <ImageView
                 android:layout_width="48dp"

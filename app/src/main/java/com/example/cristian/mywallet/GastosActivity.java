@@ -13,6 +13,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 public class GastosActivity extends AppCompatActivity {
 
     static private final int GET_TEXT_REQUEST_CODE = 1;
@@ -125,10 +129,10 @@ public class GastosActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // RESULT_OK result code and a recognized request code
-        /*if(requestCode == GET_TEXT_REQUEST_CODE){
+        if(requestCode == GET_TEXT_REQUEST_CODE){
             if(resultCode == RESULT_OK){
             }
-        }*/
+        }
     }
 
     @Override

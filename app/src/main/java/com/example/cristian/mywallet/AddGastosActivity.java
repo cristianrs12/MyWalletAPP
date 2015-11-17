@@ -76,6 +76,7 @@ public class AddGastosActivity extends AppCompatActivity {
         descripcion = mDesc.getText().toString();
 
         this.cursorPres = dbAdapter.getRegistroPres(0);
+
         presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
         presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
         

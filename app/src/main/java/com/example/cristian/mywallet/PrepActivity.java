@@ -55,4 +55,9 @@ public class PrepActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        finishActivity(RESULT_OK);
+    }
 }

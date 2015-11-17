@@ -7,6 +7,10 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 public class Main2Activity extends AppCompatActivity {
 
     TextView mUser;
@@ -17,16 +21,26 @@ public class Main2Activity extends AppCompatActivity {
         mUser= (TextView) findViewById(R.id.textView2);
         Bundle i = getIntent().getExtras();
 
-        if(i != null){//TODO: Solucionar casos en los que se recibe un Intent
+        if(i != null)
             mUser.setText(i.getString("USERID"));
-        }
+
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
+                new DataPoint(0, 1),
+                new DataPoint(1, 5),
+                new DataPoint(2, 3),
+                new DataPoint(3, 2),
+                new DataPoint(4, 6)
+        });
+
+        graph.addSeries(series);
 
         CardView movements    = (CardView) findViewById(R.id.card_view0);
         CardView addMovements = (CardView) findViewById(R.id.card_view1);
         CardView accounts     = (CardView) findViewById(R.id.card_view2);
 
         // Declare and setup Explicit Activation card
-        movements.setOnClickListener(new View.OnClickListener(){
+        graph.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (v.getContext(),GastosActivity.class);
