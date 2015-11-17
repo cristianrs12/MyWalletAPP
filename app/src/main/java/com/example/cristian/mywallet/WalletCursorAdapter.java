@@ -21,24 +21,22 @@ public class WalletCursorAdapter extends CursorAdapter
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView tv = (TextView) view ;
-        tv.setText("Concepto: "+
-                   cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO))+"\n"+
-                   "Descripción: "+
-                   cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_DESCRIPCION))+"\n"+
-                   "Cantidad: "+
-                   cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CANTIDAD))+"\n"+
-                   "Localización: "+
-                   cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION))+"\n"+
-                    "Categoria: "+
+        tv.setText("Concepto: " +
+                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO)) + "\n" +
+                "Descripción: " +
+                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_DESCRIPCION)) + "\n" +
+                "Cantidad: " +
+                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CANTIDAD)) + "\n" +
+                "Localización: " +
+                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION)) + "\n" +
+                "Categoria: " +
                 cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CATEGORIA)));
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent)
-    {
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View view = inflater.inflate(R.layout.list_item, parent, false);
-
         return view;
     }
 }

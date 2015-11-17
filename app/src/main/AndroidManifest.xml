@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.cristian.mywallet" >
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,6 +14,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
@@ -28,22 +30,42 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
 
-        <activity android:name=".GastosActivity"
-                  android:parentActivityName=".Main2Activity">
+        <activity
+            android:name=".GastosActivity"
+            android:parentActivityName=".Main2Activity" >
+
             <!-- Declaramos que la activity acepta el ACTION:SEND para tipo de datos: Java-Serialized-Object -->
             <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="application/java-serialized-object"/>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/java-serialized-object" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".AddGastosActivity"
-                  android:parentActivityName=".Main2Activity">
+        <activity
+            android:name=".AddGastosActivity"
+            android:parentActivityName=".Main2Activity" >
         </activity>
 
-        <activity android:name=".EditActivity"
+        <activity
+            android:name=".EditActivity"
+            android:parentActivityName=".GastosActivity" >
+        </activity>
+
+        <activity
+            android:name=".PrepActivity"
+            android:parentActivityName=".GastosActivity" >
+        </activity>
+
+        <activity
+            android:name=".LocationActivity"
             android:parentActivityName=".GastosActivity">
         </activity>
-    </application>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+
+        </application>
 </manifest>

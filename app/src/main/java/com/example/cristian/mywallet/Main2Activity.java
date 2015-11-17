@@ -1,13 +1,11 @@
 package com.example.cristian.mywallet;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -45,8 +43,8 @@ public class Main2Activity extends AppCompatActivity {
         accounts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent (v.getContext(),GastosActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent (v.getContext(),LocationActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -67,27 +65,15 @@ public class Main2Activity extends AppCompatActivity {
     public void onRestart() {super.onRestart();}
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        // TODO: Emit LogCat message
-
-
-    }
+    public void onDestroy() {super.onDestroy();}
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        // TODO:
-        // Save state information with a collection of key-value pairs
-        // 4 lines of code, one for every count variable
-
-
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
     }
 }

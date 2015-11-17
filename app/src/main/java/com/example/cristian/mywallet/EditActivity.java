@@ -24,13 +24,14 @@ import java.util.List;
 public class EditActivity extends Activity {
 
     private WalletDBAdapter dbAdapter;
-    private Cursor cursor;
+    private Cursor cursor, cursorPres;
 
     // Modo del formulario
     private int modo ;
 
     // Identificador del registro que se edita cuando la opción es MODIFICAR
     long mId ;
+    double cant_gasto, presDisponible, presTotal;
 
     // Elementos de la vista
     EditText mConcepto, mDescripcion, mCantidad, mLocation;
@@ -88,7 +89,7 @@ public class EditActivity extends Activity {
     }
 
     private void DatosPorDefecto() {
-        List lista = new ArrayList<String>();
+        List lista = new ArrayList<>();
         lista.add("Comida");
         lista.add("Lujos");
         lista.add("Básicos");
@@ -96,18 +97,23 @@ public class EditActivity extends Activity {
         lista.add("Mensual");
         lista.add("Transporte");
         lista.add("Otros");
-        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista);
+        ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lista);
         adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adaptador);
     }
 
     private void consultar(long id){
-        // Consultamos el centro por el identificador
+        // Consultamos por el identificador
         this.cursor = dbAdapter.getRegistro(id);
+        this.cursorPres = dbAdapter.getRegistroPres(0);
+
+        presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
+        presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
 
         mConcepto.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO)));
         mDescripcion.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_DESCRIPCION)));
         mCantidad.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CANTIDAD)));
+        cant_gasto = Double.parseDouble(mCantidad.getText().toString());
         mLocation.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION)));
     }
 
@@ -132,9 +138,9 @@ public class EditActivity extends Activity {
     }
 
     private void guardarCambios() {
-        final String concepto, descripcion;
-        final String categoria;
-        int cant;
+
+        final String concepto, descripcion, categoria;
+        double cant, newPres;
         long id;
 
         id = mId;
@@ -152,21 +158,8 @@ public class EditActivity extends Activity {
             if (TextUtils.isEmpty(mCantidad.getText().toString())) {
                 mCantidad.setError("Cantidad obligatoria");
             } else {
-                cant = Integer.parseInt(mCantidad.getText().toString());
-                /*final int[] pos = new int[1];
-                spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                        Toast.makeText(arg0.getContext(), "Seleccionado: " + arg0.getItemAtPosition(arg2).toString(), Toast.LENGTH_SHORT).show();
-                        pos[0] = arg2;
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> arg0) {
-                    }
-                });*/
+                cant = Double.parseDouble(mCantidad.getText().toString());
                 categoria = spinner.getSelectedItem().toString();
-
 
                 // Añadimos los datos del formulario
                 ContentValues reg = new ContentValues();
@@ -176,8 +169,27 @@ public class EditActivity extends Activity {
                 reg.put(WalletDBAdapter.C_CANTIDAD, cant);
                 reg.put(WalletDBAdapter.C_LOCALIZACION, "");
                 reg.put(WalletDBAdapter.C_CATEGORIA, categoria);
+
                 dbAdapter.update(reg);
+
                 Toast.makeText(EditActivity.this, "Gasto modificado correctamente", Toast.LENGTH_SHORT).show();
+
+                //Actualizamos el presupuesto disponible
+                if(cant != cant_gasto){
+                    ContentValues regPres = new ContentValues();
+                    newPres = 0;
+                    //El gasto tiene una cantidad menor
+                    if (cant < cant_gasto) newPres = (presDisponible + cant_gasto) - cant;
+                        //El gasto tiene una cantidad mayor
+                    else if (cant > cant_gasto) newPres = presDisponible - cant;
+
+                    regPres.put(WalletDBAdapter.C_ID, 0);
+                    regPres.put(WalletDBAdapter.C_PRESUPUESTO, presTotal);
+                    regPres.put(WalletDBAdapter.C_DISPONIBLE, newPres);
+                    dbAdapter.updatePres(regPres);
+
+                    Toast.makeText(EditActivity.this, "Presupuesto modificado", Toast.LENGTH_SHORT).show();
+                }
 
                 Intent i = new Intent();
                 setResult(RESULT_OK, i);

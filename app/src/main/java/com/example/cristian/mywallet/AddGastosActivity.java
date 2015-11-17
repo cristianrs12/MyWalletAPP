@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +22,10 @@ public class AddGastosActivity extends AppCompatActivity {
     EditText mDesc;
     EditText mCant;
 
+    double presDisponible, presTotal;
+    private Cursor cursorPres;
+
     private WalletDBAdapter dbAdapter;
-    private Cursor cursor;
     private Spinner spinner;
 
     @Override
@@ -69,11 +70,15 @@ public class AddGastosActivity extends AppCompatActivity {
     private void enterClicked() {
 
         String categoria, concepto, descripcion;
-        int cant;
+        double cant, newPres;
 
         concepto = mConcepto.getText().toString();
         descripcion = mDesc.getText().toString();
 
+        this.cursorPres = dbAdapter.getRegistroPres(0);
+        presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
+        presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
+        
         //Comprueba que el campo "Concepto" no esté vacio
         if(concepto.isEmpty()){
             mConcepto.setError("Concepto obligatorio");
@@ -84,8 +89,9 @@ public class AddGastosActivity extends AppCompatActivity {
         } else if(TextUtils.isEmpty(mCant.getText().toString())) {
             mCant.setError("Cantidad obligatoria");
         } else {
-            cant = Integer.parseInt(mCant.getText().toString());
+            cant = Double.parseDouble(mCant.getText().toString());
             categoria = spinner.getSelectedItem().toString();
+
             // Añadimos los datos del formulario
             ContentValues reg = new ContentValues();
             reg.put(WalletDBAdapter.C_CONCEPTO, concepto);
@@ -96,6 +102,18 @@ public class AddGastosActivity extends AppCompatActivity {
 
             dbAdapter.insert(reg);
             Toast.makeText(AddGastosActivity.this, "Gasto añadido correctamente", Toast.LENGTH_SHORT).show();
+
+            //Actualizamos el presupuesto disponible
+            ContentValues regPres = new ContentValues();
+            newPres = presDisponible - cant;
+
+            regPres.put(WalletDBAdapter.C_ID, 0);
+            regPres.put(WalletDBAdapter.C_PRESUPUESTO, presTotal);
+            regPres.put(WalletDBAdapter.C_DISPONIBLE, newPres);
+
+            dbAdapter.updatePres(regPres);
+
+            Toast.makeText(AddGastosActivity.this, "Presupuesto modificado", Toast.LENGTH_SHORT).show();
 
             Intent i= new Intent();
             setResult(RESULT_OK, i);

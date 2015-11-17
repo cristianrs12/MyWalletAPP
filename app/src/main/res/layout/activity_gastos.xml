@@ -4,26 +4,29 @@
     android:layout_height="match_parent"
     tools:context="com.example.cristian.mywallet.GastosActivity">
 
-    <TextView
-        android:layout_width="fill_parent"
+    <ListView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/presupuesto" />
+        android:id="@+id/presupuesto"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_gravity="bottom"
+        android:background="@android:color/holo_green_light"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/presupuesto">
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/listView" />
-
         <TextView
             android:id="@id/android:empty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/lista_vacia" />
     </LinearLayout>
-
 </RelativeLayout>
