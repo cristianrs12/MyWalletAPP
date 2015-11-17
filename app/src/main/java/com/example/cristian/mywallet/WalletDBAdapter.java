@@ -59,18 +59,36 @@ public class WalletDBAdapter {
         return c;
     }
 
-    // Devuelve cursor con todos las columnas de la tabla  }
+    public Cursor getCursorPrep() throws  SQLException {
+        Cursor c = db.query(true, N_TABLA2, columnas2, null, null, null, null, null, null);
+        if (c != null) c.moveToFirst();
+        return c;
+    }
+    public long updatePrep(ContentValues reg){
+        long result = 0;
+        if (db == null) abrir();
+        if (reg.containsKey(C_ID)) {
+            // Obtenemos el id y lo borramos de los valores
+            long id = reg.getAsLong(C_ID);
+            reg.remove(C_ID);
+            // Actualizamos el registro con el identificador que hemos extraido
+            result = db.update(N_TABLA2, reg, "_id=" + id, null);
+        }
+        return result;
+    }
+
+   /* // Devuelve cursor con todos las columnas de la tabla  }
     public Cursor getPresupuesto() throws SQLException {
         Cursor c = db.query( true, N_TABLA2, columnas2, null, null, null, null, null, null);
         return c;
-    }
+    }*/
 
-    // Inserta los valores en un registro de la tabla
+  /*  // Inserta los valores en un registro de la tabla
     public long insertPresupuesto(ContentValues reg) {
         if (db == null)
             abrir();
         return db.insert(N_TABLA2, null, reg);
-    }
+    }*/
 
     // Inserta los valores en un registro de la tabla
     public long insert(ContentValues reg) {
@@ -93,8 +111,20 @@ public class WalletDBAdapter {
         return result;
     }
 
+   /* public double getPresupuesto2(){
+        Cursor c;
+        double presupuesto=0;
+        c=db.query(true, N_TABLA2,columnas2,null,null,null,null,null,"1");
+        if(c.getCount()==0)
+            presupuesto=0;
+        else
+        presupuesto=c.getDouble(c.getColumnIndex(C_PRESUPUESTO));
+
+        return presupuesto;
+    }*/
+
     // Modificar el registro de presupuesto
-    public long updatePres(ContentValues reg) {
+ /*   public long updatePres(ContentValues reg) {
         long result = 0;
         if (db == null) abrir();
         if (reg.containsKey(C_ID)) {
@@ -105,7 +135,7 @@ public class WalletDBAdapter {
             result = db.update(N_TABLA2, reg, "_id=" + id, null);
         }
         return result;
-    }
+    }*/
 
     // Eliminar el registro con el identificador
     public long delete(long id){
@@ -120,12 +150,12 @@ public class WalletDBAdapter {
         if (c != null) c.moveToFirst();
         return c;
     }
-
+/*
     // Devuelve cursor con todos las columnas del registro
     public Cursor getRegistroPres(long id) throws SQLException {
         Cursor c = db.query( true, N_TABLA2, columnas2, C_ID + "=" + id, null, null, null, null, null);
         //Nos movemos al primer registro de la consulta
         if (c != null) c.moveToFirst();
         return c;
-    }
+    }*/
 }

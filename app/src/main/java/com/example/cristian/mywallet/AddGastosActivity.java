@@ -70,15 +70,15 @@ public class AddGastosActivity extends AppCompatActivity {
     private void enterClicked() {
 
         String categoria, concepto, descripcion;
+        double presupuestodisp;
         double cant, newPres;
 
         concepto = mConcepto.getText().toString();
         descripcion = mDesc.getText().toString();
 
-        this.cursorPres = dbAdapter.getRegistroPres(0);
-
-        presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
-        presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
+       //this.cursorPres = dbAdapter.getRegistroPres(0);
+       // presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
+       // presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
         
         //Comprueba que el campo "Concepto" no esté vacio
         if(concepto.isEmpty()){
@@ -91,7 +91,9 @@ public class AddGastosActivity extends AppCompatActivity {
             mCant.setError("Cantidad obligatoria");
         } else {
             cant = Double.parseDouble(mCant.getText().toString());
+            Constants.disponible=Constants.disponible-cant;
             categoria = spinner.getSelectedItem().toString();
+
 
             // Añadimos los datos del formulario
             ContentValues reg = new ContentValues();
@@ -106,13 +108,12 @@ public class AddGastosActivity extends AppCompatActivity {
 
             //Actualizamos el presupuesto disponible
             ContentValues regPres = new ContentValues();
-            newPres = presDisponible - cant;
 
-            regPres.put(WalletDBAdapter.C_ID, 0);
-            regPres.put(WalletDBAdapter.C_PRESUPUESTO, presTotal);
-            regPres.put(WalletDBAdapter.C_DISPONIBLE, newPres);
+            regPres.put(WalletDBAdapter.C_ID, 1);
+            regPres.put(WalletDBAdapter.C_PRESUPUESTO, Constants.presupuesto);
+            regPres.put(WalletDBAdapter.C_DISPONIBLE, Constants.disponible);
 
-            dbAdapter.updatePres(regPres);
+            dbAdapter.updatePrep(regPres);
 
             Toast.makeText(AddGastosActivity.this, "Presupuesto modificado", Toast.LENGTH_SHORT).show();
 

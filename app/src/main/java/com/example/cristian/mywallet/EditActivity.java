@@ -105,10 +105,10 @@ public class EditActivity extends Activity {
     private void consultar(long id){
         // Consultamos por el identificador
         this.cursor = dbAdapter.getRegistro(id);
-        this.cursorPres = dbAdapter.getRegistroPres(0);
+        //this.cursorPres = dbAdapter.getRegistroPres(0);
 
-        presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
-        presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
+        //presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
+        //presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
 
         mConcepto.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO)));
         mDescripcion.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_DESCRIPCION)));
@@ -126,7 +126,14 @@ public class EditActivity extends Activity {
         dialogEliminar.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int boton) {
                 long id = mId;
+                Constants.disponible=Constants.disponible+cant_gasto;
                 dbAdapter.delete(id);
+
+                ContentValues regPres = new ContentValues();
+                regPres.put(WalletDBAdapter.C_ID, 1);
+                regPres.put(WalletDBAdapter.C_PRESUPUESTO, Constants.presupuesto);
+                regPres.put(WalletDBAdapter.C_DISPONIBLE, Constants.disponible);
+                dbAdapter.updatePrep(regPres);
                 Toast.makeText(EditActivity.this, "Gasto eliminado correctamente", Toast.LENGTH_SHORT).show();
                 // Devolvemos el control
                 setResult(RESULT_OK);
@@ -146,7 +153,6 @@ public class EditActivity extends Activity {
         id = mId;
         concepto = mConcepto.getText().toString();
         descripcion = mDescripcion.getText().toString();
-
         //Comprueba que el campo "Concepto" no esté vacio
         if(concepto.isEmpty()){
             mConcepto.setError("Concepto obligatorio");
@@ -159,8 +165,9 @@ public class EditActivity extends Activity {
                 mCantidad.setError("Cantidad obligatoria");
             } else {
                 cant = Double.parseDouble(mCantidad.getText().toString());
+                Constants.disponible=Constants.disponible+cant_gasto;
                 categoria = spinner.getSelectedItem().toString();
-
+                Constants.disponible=Constants.disponible-cant;
                 // Añadimos los datos del formulario
                 ContentValues reg = new ContentValues();
                 reg.put(WalletDBAdapter.C_ID, id);
@@ -174,22 +181,24 @@ public class EditActivity extends Activity {
 
                 Toast.makeText(EditActivity.this, "Gasto modificado correctamente", Toast.LENGTH_SHORT).show();
 
+                ContentValues regPres = new ContentValues();
+                regPres.put(WalletDBAdapter.C_ID, 1);
+                regPres.put(WalletDBAdapter.C_PRESUPUESTO, Constants.presupuesto);
+                regPres.put(WalletDBAdapter.C_DISPONIBLE, Constants.disponible);
+                dbAdapter.updatePrep(regPres);
+
+                Toast.makeText(EditActivity.this, "Presupuesto modificado", Toast.LENGTH_SHORT).show();
                 //Actualizamos el presupuesto disponible
-                if(cant != cant_gasto){
-                    ContentValues regPres = new ContentValues();
+                /*if(cant != cant_gasto){
+
                     newPres = 0;
                     //El gasto tiene una cantidad menor
                     if (cant < cant_gasto) newPres = (presDisponible + cant_gasto) - cant;
                         //El gasto tiene una cantidad mayor
                     else if (cant > cant_gasto) newPres = presDisponible - cant;
 
-                    regPres.put(WalletDBAdapter.C_ID, 0);
-                    regPres.put(WalletDBAdapter.C_PRESUPUESTO, presTotal);
-                    regPres.put(WalletDBAdapter.C_DISPONIBLE, newPres);
-                    dbAdapter.updatePres(regPres);
 
-                    Toast.makeText(EditActivity.this, "Presupuesto modificado", Toast.LENGTH_SHORT).show();
-                }
+                }*/
 
                 Intent i = new Intent();
                 setResult(RESULT_OK, i);

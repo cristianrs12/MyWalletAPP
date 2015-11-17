@@ -32,6 +32,8 @@ public class WalletDBHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE UNIQUE INDEX gasto_concepto ON GASTOS(gasto_concepto ASC)");
         Log.i(this.getClass().toString(), "Tabla GASTOS creada");
         Log.i(this.getClass().toString(), "Tabla PRESUPUESTOS creada");
+
+        db.execSQL("INSERT INTO PRESUPUESTOS VALUES (1, 0, 0)");
     }
 
     @Override

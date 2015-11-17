@@ -42,13 +42,17 @@ public class PrepActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(prep.getText().toString())) {
             prep.setError("Cantidad obligatoria");
         }else{
-            presupuesto = Double.parseDouble(prep.getText().toString());
-            ContentValues reg = new ContentValues();
-            reg.put(WalletDBAdapter.C_DISPONIBLE,presupuesto);
-            reg.put(WalletDBAdapter.C_PRESUPUESTO, presupuesto);
-            dbAdapter.insertPresupuesto(reg);
+            //presupuesto = Double.parseDouble(prep.getText().toString());
 
+            Constants.presupuesto = Double.parseDouble(prep.getText().toString());
+            Constants.disponible = Double.parseDouble(prep.getText().toString());
             Toast.makeText(PrepActivity.this, "Nuevo Presupuesto Añadido", Toast.LENGTH_SHORT).show();
+
+            ContentValues reg = new ContentValues();
+            reg.put(WalletDBAdapter.C_ID,1);
+            reg.put(WalletDBAdapter.C_DISPONIBLE,Constants.presupuesto);
+            reg.put(WalletDBAdapter.C_PRESUPUESTO, Constants.disponible);
+            dbAdapter.updatePrep(reg);
 
             Intent i= new Intent();
             setResult(RESULT_OK, i);

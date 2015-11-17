@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
@@ -34,14 +35,16 @@ public class GastosActivity extends AppCompatActivity {
 
     GastosList gastos;
     ListView listV;
-    ListView presupuesto;
+    //ListView presupuesto;
+    TextView presu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gastos);
         listV=(ListView) findViewById(R.id.listView);
-        presupuesto=(ListView) findViewById(R.id.presupuesto);
+        //presupuesto=(ListView) findViewById(R.id.presupuesto);
+        presu= (TextView) findViewById(R.id.presu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbAdapter = new WalletDBAdapter(this);
@@ -64,21 +67,41 @@ public class GastosActivity extends AppCompatActivity {
     }
 
     private void getPresup(){
-        cursor2 = dbAdapter.getPresupuesto();
-        if (cursor2.getCount()==0){
+        double presupuesto=0;
+        double disponible=0;
+        Cursor prep;
+        prep=dbAdapter.getCursorPrep();
+        Constants.presupuesto=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
+        Constants.disponible=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
+        presupuesto=Constants.disponible;
+        if(presupuesto==0){
             Log.e("SIN RESULTADOS", "EL CURSOR NO HA OBTENIDO RESULTADOS");
             Intent i = new Intent(GastosActivity.this, PrepActivity.class);
             startActivityForResult(i, RESULT_OK);
-        }else{
-            presAdapter = new PresupuestoCursorAdapter(this, cursor2);
-            presupuesto.setAdapter(presAdapter);
         }
+        else {
+            disponible = Constants.disponible;
+            presu.setText("Presupuesto: "+Double.toString(presupuesto)+"€ - Disponible: " + Double.toString(disponible) + "€" );
+        }
+        /* presupuesto=Constants.presupuesto;
+        if(presupuesto==0){
+            Log.e("SIN RESULTADOS", "EL CURSOR NO HA OBTENIDO RESULTADOS");
+            Intent i = new Intent(GastosActivity.this, PrepActivity.class);
+            startActivityForResult(i, RESULT_OK);
+        }
+        else {
+            disponible = Constants.disponible;
+            presu.setText("Presupuesto: "+Double.toString(presupuesto)+"€ - Disponible: " + Double.toString(disponible) + "€" );
+        }*/
+
     }
 
     private void updatePres(){
-        cursor2 = dbAdapter.getPresupuesto();
-        presAdapter = new PresupuestoCursorAdapter(this, cursor2);
-        presupuesto.setAdapter(presAdapter);
+        double presupuesto=0;
+        double disponible=0;
+        presupuesto=Constants.presupuesto;
+        disponible = Constants.disponible;
+        presu.setText("Presupuesto: "+Double.toString(presupuesto)+"€ - Disponible: " + Double.toString(disponible) + "€" );
     }
 
     private void getDataDB() {
