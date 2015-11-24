@@ -78,6 +78,11 @@ public class WalletDBAdapter {
         return result;
     }
 
+    public void deleteAll(){
+        if(db == null) abrir();
+        db.execSQL("DELETE FROM GASTOS");
+    }
+
    /* // Devuelve cursor con todos las columnas de la tabla  }
     public Cursor getPresupuesto() throws SQLException {
         Cursor c = db.query( true, N_TABLA2, columnas2, null, null, null, null, null, null);

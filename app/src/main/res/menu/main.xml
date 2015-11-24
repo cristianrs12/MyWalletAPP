@@ -2,9 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- Settings, should always be in the overflow -->
-    <item android:id="@+id/action_settings"
+    <item android:id="@+id/action_delete"
         android:icon="@android:drawable/ic_menu_preferences"
-        android:title="@string/action_settings"
+        android:title="@string/action_delete"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/action_add_prep"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/action_prep"
         app:showAsAction="never"/>
 <!--
     <item

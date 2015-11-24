@@ -1,7 +1,10 @@
 package com.example.cristian.mywallet;
 
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -109,6 +112,10 @@ public class GastosActivity extends AppCompatActivity {
         listV.setAdapter(walletAdapter);
     }
 
+    private void deleteAll(){
+        dbAdapter.deleteAll();
+    }
+
     @Override
     public void onStart() {super.onStart();}
 
@@ -167,7 +174,31 @@ public class GastosActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_settings:
+            case R.id.action_delete:
+                AlertDialog.Builder dialogEliminar = new AlertDialog.Builder(this);
+                dialogEliminar.setIcon(android.R.drawable.ic_dialog_alert);
+                dialogEliminar.setTitle("BORRAR TODO");
+                dialogEliminar.setMessage("¿Seguro que desea borrar todos los gastos?");
+                dialogEliminar.setCancelable(false);
+                dialogEliminar.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int boton) {
+                        deleteAll();
+                        Constants.disponible=Constants.presupuesto;
+                        ContentValues reg=new ContentValues();
+                        reg.put(WalletDBAdapter.C_ID,1);
+                        reg.put(WalletDBAdapter.C_PRESUPUESTO,Constants.presupuesto);
+                        reg.put(WalletDBAdapter.C_DISPONIBLE,Constants.disponible);
+                        dbAdapter.updatePrep(reg);
+                        getDataDB();
+                        updatePres();
+                    }
+                });
+                dialogEliminar.setNegativeButton(android.R.string.no, null);
+                dialogEliminar.show();
+                return true;
+            case R.id.action_add_prep:
+                Intent i = new Intent(GastosActivity.this, ModificarPrep.class);
+                startActivityForResult(i, RESULT_OK);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

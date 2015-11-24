@@ -20,7 +20,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Strings related to settings -->
-    <string name="action_settings">Settings</string>
+    <string name="action_delete">Borrar Todo</string>
 
     <!-- Strings related to gastos -->
     <string name="title_activity_gastos">Gastos</string>
@@ -35,7 +35,7 @@
     <string name="ok_eliminar">Eliminando gasto</string>
     <string name="text_eliminar">Se va a eliminar este elemento,\n
                                  ¿Desea continuar?</string>
-
+    <string name="action_prep">Modificar Presupuesto</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

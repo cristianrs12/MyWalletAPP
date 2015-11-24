@@ -27,7 +27,7 @@ public class WalletDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db){
         Log.i(this.getClass().toString(), "Creando base de datos");
-        db.execSQL("CREATE TABLE GASTOS( _id INTEGER PRIMARY KEY AUTOINCREMENT, gasto_concepto TEXT NOT NULL, gasto_descripcion TEXT, gasto_cantidad NUMERIC, gasto_localizacion TEXT, categoria TEXT)");
+        db.execSQL("CREATE TABLE GASTOS( _id INTEGER PRIMARY KEY AUTOINCREMENT, gasto_concepto TEXT, gasto_descripcion TEXT, gasto_cantidad NUMERIC, gasto_localizacion TEXT, categoria TEXT)");
         db.execSQL("CREATE TABLE PRESUPUESTOS( _id INTEGER PRIMARY KEY AUTOINCREMENT, presupuesto NUMERIC, disponible NUMERIC)");
         db.execSQL("CREATE UNIQUE INDEX gasto_concepto ON GASTOS(gasto_concepto ASC)");
         Log.i(this.getClass().toString(), "Tabla GASTOS creada");
