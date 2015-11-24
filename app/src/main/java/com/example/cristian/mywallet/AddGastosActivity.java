@@ -54,7 +54,7 @@ public class AddGastosActivity extends AppCompatActivity {
     }
 
     private void DatosPorDefecto() {
-        List lista = new ArrayList<String>();
+        List lista = new ArrayList<>();
         lista.add("Comida");
         lista.add("Lujos");
         lista.add("Básicos");
@@ -68,7 +68,6 @@ public class AddGastosActivity extends AppCompatActivity {
     }
 
     private void enterClicked() {
-
         String categoria, concepto, descripcion;
         double presupuestodisp;
         double cant, newPres;
@@ -76,10 +75,6 @@ public class AddGastosActivity extends AppCompatActivity {
         concepto = mConcepto.getText().toString();
         descripcion = mDesc.getText().toString();
 
-       //this.cursorPres = dbAdapter.getRegistroPres(0);
-       // presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
-       // presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
-        
         //Comprueba que el campo "Concepto" no esté vacio
         if(concepto.isEmpty()){
             mConcepto.setError("Concepto obligatorio");
@@ -94,7 +89,6 @@ public class AddGastosActivity extends AppCompatActivity {
             Constants.disponible=Constants.disponible-cant;
             categoria = spinner.getSelectedItem().toString();
 
-
             // Añadimos los datos del formulario
             ContentValues reg = new ContentValues();
             reg.put(WalletDBAdapter.C_CONCEPTO, concepto);
@@ -108,13 +102,11 @@ public class AddGastosActivity extends AppCompatActivity {
 
             //Actualizamos el presupuesto disponible
             ContentValues regPres = new ContentValues();
-
             regPres.put(WalletDBAdapter.C_ID, 1);
             regPres.put(WalletDBAdapter.C_PRESUPUESTO, Constants.presupuesto);
             regPres.put(WalletDBAdapter.C_DISPONIBLE, Constants.disponible);
 
             dbAdapter.updatePrep(regPres);
-
             Toast.makeText(AddGastosActivity.this, "Presupuesto modificado", Toast.LENGTH_SHORT).show();
 
             Intent i= new Intent();

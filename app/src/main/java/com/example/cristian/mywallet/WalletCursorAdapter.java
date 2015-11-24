@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.Filter;
 import android.widget.TextView;
 
-public class WalletCursorAdapter extends CursorAdapter
-{
+public class WalletCursorAdapter extends CursorAdapter {
     private WalletDBAdapter dbAdapter = null ;
 
     public WalletCursorAdapter(Context context, Cursor c) {

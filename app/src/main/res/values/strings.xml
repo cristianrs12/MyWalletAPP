@@ -11,7 +11,7 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">My Wallet</string>
     <string name="addGasto">AddGasto</string>
     <string name="action_share">share</string>
 
@@ -35,5 +35,8 @@
     <string name="ok_eliminar">Eliminando gasto</string>
     <string name="text_eliminar">Se va a eliminar este elemento,\n
                                  ¿Desea continuar?</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

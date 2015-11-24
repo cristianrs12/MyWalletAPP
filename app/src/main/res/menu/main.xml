@@ -6,8 +6,12 @@
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
-    <item android:id="@+id/addGasto"
-        android:icon="@drawable/plus"
-        app:showAsAction="ifRoom"
-        android:title="" />
+<!--
+    <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+-->
 </menu>

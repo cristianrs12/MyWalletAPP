@@ -89,7 +89,7 @@ public class EditActivity extends Activity {
     }
 
     private void DatosPorDefecto() {
-        List lista = new ArrayList<>();
+        List lista = new ArrayList<String>();
         lista.add("Comida");
         lista.add("Lujos");
         lista.add("Básicos");
@@ -97,7 +97,7 @@ public class EditActivity extends Activity {
         lista.add("Mensual");
         lista.add("Transporte");
         lista.add("Otros");
-        ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lista);
+        ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista);
         adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adaptador);
     }

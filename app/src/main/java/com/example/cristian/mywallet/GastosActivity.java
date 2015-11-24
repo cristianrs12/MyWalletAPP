@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+
 public class GastosActivity extends AppCompatActivity {
 
     static private final int GET_TEXT_REQUEST_CODE = 1;
@@ -31,16 +33,17 @@ public class GastosActivity extends AppCompatActivity {
 
     GastosList gastos;
     ListView listV;
-    //ListView presupuesto;
     TextView presu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gastos);
-        listV=(ListView) findViewById(R.id.listView);
-        //presupuesto=(ListView) findViewById(R.id.presupuesto);
-        presu= (TextView) findViewById(R.id.presu);
+
+        listV = (ListView) findViewById(R.id.listView);
+        presu = (TextView) findViewById(R.id.presu);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dbAdapter = new WalletDBAdapter(this);
@@ -60,6 +63,15 @@ public class GastosActivity extends AppCompatActivity {
                 startActivityForResult(i, C_VISUALIZAR);
             }
         });
+
+        fab.attachToListView(listV);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(getBaseContext(),AddGastosActivity.class);
+                startActivityForResult(i,GET_TEXT_REQUEST_CODE);
+            }
+        });
     }
 
     private void getPresup(){
@@ -69,7 +81,7 @@ public class GastosActivity extends AppCompatActivity {
         prep=dbAdapter.getCursorPrep();
         Constants.presupuesto=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
         Constants.disponible=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
-        presupuesto=Constants.disponible;
+        presupuesto=Constants.presupuesto;
         if(presupuesto==0){
             Log.e("SIN RESULTADOS", "EL CURSOR NO HA OBTENIDO RESULTADOS");
             Intent i = new Intent(GastosActivity.this, PrepActivity.class);
@@ -79,17 +91,6 @@ public class GastosActivity extends AppCompatActivity {
             disponible = Constants.disponible;
             presu.setText("Presupuesto: "+Double.toString(presupuesto)+"€ - Disponible: " + Double.toString(disponible) + "€" );
         }
-        /* presupuesto=Constants.presupuesto;
-        if(presupuesto==0){
-            Log.e("SIN RESULTADOS", "EL CURSOR NO HA OBTENIDO RESULTADOS");
-            Intent i = new Intent(GastosActivity.this, PrepActivity.class);
-            startActivityForResult(i, RESULT_OK);
-        }
-        else {
-            disponible = Constants.disponible;
-            presu.setText("Presupuesto: "+Double.toString(presupuesto)+"€ - Disponible: " + Double.toString(disponible) + "€" );
-        }*/
-
     }
 
     private void updatePres(){
@@ -97,11 +98,13 @@ public class GastosActivity extends AppCompatActivity {
         double disponible=0;
         presupuesto = Constants.presupuesto;
         disponible = Constants.disponible;
-        presu.setText("Presupuesto: "+Double.toString(presupuesto)+"€ - Disponible: " + Double.toString(disponible) + "€" );
+        presu.setText("Presupuesto: " + Double.toString(presupuesto) + "€ - Disponible: " + Double.toString(disponible) + "€");
     }
 
     private void getDataDB() {
         cursor = dbAdapter.getCursor();
+        if(cursor.getCount()>6)
+            Log.i("NUMERO DE ENTRADAS",Integer.toString(cursor.getCount()));
         walletAdapter = new WalletCursorAdapter(this, cursor);
         listV.setAdapter(walletAdapter);
     }
@@ -112,8 +115,14 @@ public class GastosActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
+    //    searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+    //    SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+    //    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
         return true;
     }
 
@@ -150,6 +159,7 @@ public class GastosActivity extends AppCompatActivity {
         // RESULT_OK result code and a recognized request code
         if(requestCode == GET_TEXT_REQUEST_CODE){
             if(resultCode == RESULT_OK){
+                Toast.makeText(getBaseContext(), "Activity OnResult captada", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -157,10 +167,6 @@ public class GastosActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.addGasto:
-                Intent i=new Intent(getBaseContext(),AddGastosActivity.class);
-                startActivityForResult(i,GET_TEXT_REQUEST_CODE);
-                return true;
             case R.id.action_settings:
                 return true;
             default:
