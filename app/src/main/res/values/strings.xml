@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">My Wallet</string>
-    
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -36,7 +36,19 @@
     <string name="text_eliminar">Se va a eliminar este elemento,\n
                                  ¿Desea continuar?</string>
     <string name="action_prep">Modificar Presupuesto</string>
+
+    <string name="footer_text">Get New Place</string>
+    <string name="delete">Delete</string>
+    <string name="print">Print</string>
+    <string name="place_one">Place One</string>
+    <string name="place_invalid">Place Invalid</string>
+    <string name="place_two">Place Two</string>
+    
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_location">Map</string>
+    <string name="title_activity_wallet_maps">Map</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="map_view_loc">Ver en el mapa</string>
 
 </resources>

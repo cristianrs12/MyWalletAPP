@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
@@ -22,11 +21,7 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        mUser= (TextView) findViewById(R.id.textView2);
         Bundle i = getIntent().getExtras();
-
-        if(i != null)
-            mUser.setText(i.getString("USERID"));
 
         // Obtenemos las views de las gráficas de la MainActivity
         GraphView graph = (GraphView) findViewById(R.id.graph);
@@ -62,7 +57,7 @@ public class Main2Activity extends AppCompatActivity {
         // Obtenemos las views de las cards
         CardView movements    = (CardView) findViewById(R.id.card_view0);
         CardView addMovements = (CardView) findViewById(R.id.card_view1);
-        CardView accounts     = (CardView) findViewById(R.id.card_view2);
+        //CardView accounts     = (CardView) findViewById(R.id.card_view2);
 
         // Declare and setup Explicit Activation card
         graph.setOnClickListener(new View.OnClickListener(){
@@ -76,13 +71,6 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (v.getContext(),GraphsActivity.class);
-                startActivity(intent);
-            }
-        });
-        accounts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (v.getContext(),LocationActivity.class);
                 startActivity(intent);
             }
         });

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class GraphsActivity extends AppCompatActivity {
 
     private WalletDBAdapter dbAdapter;
+    private double presupuesto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +26,20 @@ public class GraphsActivity extends AppCompatActivity {
         dbAdapter = new WalletDBAdapter(this);
         dbAdapter.abrir();
 
-        //GraphView graph = (GraphView) findViewById(R.id.graph3);
         GraphView graph2 = (GraphView) findViewById(R.id.graph4);
 
         double[] valores = formatearArray(getValores());
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-                new DataPoint(4, Constants.presupuesto)
+                new DataPoint(0, Constants.presupuesto),
+                new DataPoint(1, Constants.presupuesto),
+                new DataPoint(2, Constants.presupuesto),
+                new DataPoint(3, Constants.presupuesto),
+                new DataPoint(4, Constants.presupuesto),
+                new DataPoint(5, Constants.presupuesto),
+                new DataPoint(6, Constants.presupuesto),
+                new DataPoint(7, Constants.presupuesto),
+                new DataPoint(8, Constants.presupuesto)
         });
         BarGraphSeries<DataPoint> series2 = new BarGraphSeries<>(new DataPoint[] {
                 new DataPoint(1, valores[0]),
@@ -44,12 +52,39 @@ public class GraphsActivity extends AppCompatActivity {
         });
 
         graph2.addSeries(series);
+
+        series.setTitle("Presupuesto");
+
+        int R = (int) presupuesto * 255/4,
+            G = (int) Math.abs(presupuesto * 255/6),
+            B = 100;
+
+        series.setColor(Color.rgb(R, G, B));
+        series.setDrawDataPoints(false);
+        series.setThickness(5);
+
         graph2.addSeries(series2);
 
         series2.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
-                return Color.rgb((int) data.getX() * 255 / 4, (int) Math.abs(data.getY() * 255 / 6), 100);
+                switch (Double.toString(data.getX())){
+                    case "1.0":
+                        return Color.rgb(255,230,0);
+                    case "2.0":
+                        return Color.rgb(255,0,0);
+                    case "3.0":
+                        return Color.rgb(0,255,13);
+                    case "4.0":
+                        return Color.rgb(0,247,255);
+                    case "5.0":
+                        return Color.rgb(0,34,255);
+                    case "6.0":
+                        return Color.rgb(148,2,211);
+                    case "7.0":
+                        return Color.rgb(255,136,0);
+                }
+                return Color.rgb(0,0,0);
             }
         });
         series2.setSpacing(50);
@@ -74,6 +109,12 @@ public class GraphsActivity extends AppCompatActivity {
 
     public ArrayList<DataPoint> getValores() {
         ArrayList<DataPoint> auxV = new ArrayList<>();
+
+        Cursor prep;
+        prep=dbAdapter.getCursorPrep();
+        Constants.presupuesto=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
+        Constants.disponible=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
+        presupuesto=Constants.presupuesto;
 
         double auxC = 0;
         int cat = 0;

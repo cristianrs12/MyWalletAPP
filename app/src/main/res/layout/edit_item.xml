@@ -73,15 +73,32 @@
             android:layout_below="@+id/edit_cantidad"
             android:layout_marginTop="20dp" />
 
-        <EditText
+        <TextView
             android:id="@+id/edit_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/label_location"
-            android:ems="10"
-            android:inputType="time" >
-        </EditText>
+            android:layout_below="@+id/edit_cantidad"
+            android:layout_toRightOf="@+id/label_location"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="8dp"
+            android:clickable="true"
+            android:ems="15"
+            android:gravity="center_horizontal" />
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:id="@+id/mapContainer"
+            android:layout_below="@id/edit_location"
+            tools:context=".EditActivity" >
+            <fragment
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                class="com.google.android.gms.maps.MapFragment"
+                android:layout_marginTop="15dp" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/label_categoria"
@@ -89,7 +106,7 @@
             android:layout_height="wrap_content"
             android:text="Categoria"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_below="@+id/edit_location"
+            android:layout_below="@+id/mapContainer"
             android:layout_marginTop="20dp" />
 
         <Spinner
@@ -127,6 +144,5 @@
                 android:text="Cancelar"
                 android:layout_marginLeft="20dp" />
         </LinearLayout>
-
     </RelativeLayout>
 </ScrollView>

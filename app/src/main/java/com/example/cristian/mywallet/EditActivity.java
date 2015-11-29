@@ -8,23 +8,33 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EditActivity extends Activity {
 
     private WalletDBAdapter dbAdapter;
     private Cursor cursor, cursorPres;
+
+    private  List<String> L;
+    List lista = new ArrayList<String>() {};
 
     // Modo del formulario
     private int modo ;
@@ -34,9 +44,11 @@ public class EditActivity extends Activity {
     double cant_gasto, presDisponible, presTotal;
 
     // Elementos de la vista
-    EditText mConcepto, mDescripcion, mCantidad, mLocation;
-    Spinner spinner;
-
+    private EditText mConcepto, mDescripcion, mCantidad;
+    private TextView mLocation;
+    private Spinner spinner;
+    private GoogleMap map;
+    private LatLng myLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,16 +59,27 @@ public class EditActivity extends Activity {
         del = (Button) findViewById(R.id.boton_borrar);
         cancel = (Button) findViewById(R.id.boton_cancelar);
         spinner = (Spinner) findViewById(R.id.spinner);
+
         Intent intent = getIntent();
         Bundle extra = intent.getExtras();
+
+        lista.add("Comida");
+        lista.add("Lujos");
+        lista.add("Básicos");
+        lista.add("Caprichos");
+        lista.add("Mensual");
+        lista.add("Transporte");
+        lista.add("Otros");
+
         DatosPorDefecto();
+
         if (extra == null) return;
 
         // Obtenemos los elementos de la vista
         mConcepto = (EditText) findViewById(R.id.edit_concepto);
         mDescripcion = (EditText) findViewById(R.id.edit_desc);
         mCantidad = (EditText) findViewById(R.id.edit_cantidad);
-        mLocation = (EditText) findViewById(R.id.edit_location);
+        mLocation = (TextView) findViewById(R.id.edit_location);
 
         // Creamos el adaptador
         dbAdapter = new WalletDBAdapter(this);
@@ -66,6 +89,14 @@ public class EditActivity extends Activity {
         if (extra.containsKey(WalletDBAdapter.C_ID)){
             mId = extra.getLong(WalletDBAdapter.C_ID);
             consultar(mId);
+
+            myLocation = new LatLng(Double.parseDouble(L.get(0)),Double.parseDouble(L.get(1)));
+
+            map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+            map.getUiSettings().setScrollGesturesEnabled(false);
+            Marker location = map.addMarker(new MarkerOptions().position(myLocation).title("Wallet Here!").icon(BitmapDescriptorFactory.fromResource(R.drawable.map_logo)));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15));
+            map.animateCamera(CameraUpdateFactory.zoomTo(17), 2000, null);
         }
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -89,14 +120,8 @@ public class EditActivity extends Activity {
     }
 
     private void DatosPorDefecto() {
-        List lista = new ArrayList<String>();
-        lista.add("Comida");
-        lista.add("Lujos");
-        lista.add("Básicos");
-        lista.add("Caprichos");
-        lista.add("Mensual");
-        lista.add("Transporte");
-        lista.add("Otros");
+
+
         ArrayAdapter<String> adaptador = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, lista);
         adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adaptador);
@@ -105,16 +130,14 @@ public class EditActivity extends Activity {
     private void consultar(long id){
         // Consultamos por el identificador
         this.cursor = dbAdapter.getRegistro(id);
-        //this.cursorPres = dbAdapter.getRegistroPres(0);
-
-        //presDisponible = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
-        //presTotal = cursorPres.getDouble(cursorPres.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
 
         mConcepto.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO)));
         mDescripcion.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_DESCRIPCION)));
         mCantidad.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CANTIDAD)));
-        cant_gasto = Double.parseDouble(mCantidad.getText().toString());
         mLocation.setText(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION)));
+        cant_gasto = Double.parseDouble(mCantidad.getText().toString());
+        spinner.setSelection(lista.indexOf(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CATEGORIA))));
+        L = Arrays.asList(cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION)).split("\\s*,\\s*"));
     }
 
     private void eliminarItem() {
@@ -134,7 +157,9 @@ public class EditActivity extends Activity {
                 regPres.put(WalletDBAdapter.C_PRESUPUESTO, Constants.presupuesto);
                 regPres.put(WalletDBAdapter.C_DISPONIBLE, Constants.disponible);
                 dbAdapter.updatePrep(regPres);
+
                 Toast.makeText(EditActivity.this, "Gasto eliminado correctamente", Toast.LENGTH_SHORT).show();
+
                 // Devolvemos el control
                 setResult(RESULT_OK);
                 finish();
@@ -174,7 +199,7 @@ public class EditActivity extends Activity {
                 reg.put(WalletDBAdapter.C_CONCEPTO, concepto);
                 reg.put(WalletDBAdapter.C_DESCRIPCION, descripcion);
                 reg.put(WalletDBAdapter.C_CANTIDAD, cant);
-                reg.put(WalletDBAdapter.C_LOCALIZACION, "");
+                reg.put(WalletDBAdapter.C_LOCALIZACION, myLocation.latitude+","+myLocation.longitude);
                 reg.put(WalletDBAdapter.C_CATEGORIA, categoria);
 
                 dbAdapter.update(reg);

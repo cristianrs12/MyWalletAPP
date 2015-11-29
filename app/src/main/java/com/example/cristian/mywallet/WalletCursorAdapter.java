@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-import android.widget.Filter;
 import android.widget.TextView;
 
 public class WalletCursorAdapter extends CursorAdapter {
@@ -21,16 +20,17 @@ public class WalletCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView tv = (TextView) view ;
+
         tv.setText("Concepto: " +
-                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO)) + "\n" +
-                "Descripción: " +
-                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_DESCRIPCION)) + "\n" +
-                "Cantidad: " +
-                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CANTIDAD)) + "\n" +
-                "Localización: " +
-                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION)) + "\n" +
-                "Categoria: " +
-                cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CATEGORIA)));
+                    cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CONCEPTO)) + "\n" +
+                    "Descripción: " +
+                    cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_DESCRIPCION)) + "\n" +
+                    "Cantidad: " +
+                    cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CANTIDAD)) + "\n" +
+                    "Localización: " +
+                    cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_LOCALIZACION)) + "\n" +
+                    "Categoria: " +
+                    cursor.getString(cursor.getColumnIndex(WalletDBAdapter.C_CATEGORIA)));
     }
 
     @Override

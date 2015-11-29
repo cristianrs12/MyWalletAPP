@@ -1,178 +1,258 @@
 package com.example.cristian.mywallet;
 
-
-import android.content.Intent;
-import android.location.Location;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
-public class LocationActivity extends FragmentActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.widget.TextView;
 
-    private String mLastUpdateTime;
-    private String mAddressOutput;
-    private Location mLastLocation;
-    private AddressResultReceiver mResultReceiver;
-    private Location mCurrentLocation;
-    private LocationRequest mLocationRequest;
-    private TextView mLatitudeText;
-    private TextView mLongitudeText;
-    private TextView mLatitudeTextView;
-    private TextView mLongitudeTextView;
-    private TextView mLastUpdateTimeTextView;
-    private GoogleApiClient mGoogleApiClient;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-    private boolean mRequestingLocationUpdates = true;
-    private static final String LOCATION_KEY = "location_key";
-    private static final String LAST_UPDATED_TIME_STRING_KEY = "last_time";
-    private static final String REQUESTING_LOCATION_UPDATES_KEY = "request_location";
+public class LocationActivity extends Activity {
+
+    private static final long ONE_MIN = 1000 * 30;
+    private static final long TWO_MIN = ONE_MIN * 2;
+    private static final long FIVE_MIN = ONE_MIN * 5;
+    private static final long MEASURE_TIME = 1000 * 30;
+    private static final long POLLING_FREQ = 1000 * 10;
+    private static final float MIN_ACCURACY = 25.0f;
+    private static final float MIN_LAST_READ_ACCURACY = 500.0f;
+    private static final float MIN_DISTANCE = 10.0f;
+
+    // Views for display location information
+    private TextView mAccuracyView;
+    private TextView mTimeView;
+    private TextView mLatView;
+    private TextView mLngView;
+
+    private GoogleMap mMap;
+
+    private int mTextViewColor = Color.GRAY;
+
+    // Current best location estimate
+    private Location mBestReading;
+
+    // Reference to the LocationManager and LocationListener
+    private LocationManager mLocationManager;
+    private LocationListener mLocationListener;
+
+    private final String TAG = "LocationGetLocationActivity";
+
+    private boolean mFirstUpdate = true;
+
+    private GoogleApiClient client;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_location);
-        updateValuesFromBundle(savedInstanceState);
-        buildGoogleApiClient();
+
+        mAccuracyView = (TextView) findViewById(R.id.accuracy_view);
+        mTimeView = (TextView) findViewById(R.id.time_view);
+        mLatView = (TextView) findViewById(R.id.lat_view);
+        mLngView = (TextView) findViewById(R.id.lng_view);
+
+        // Acquire reference to the LocationManager
+        if (null == (mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE)))
+            finish();
+
+        // Get best last location measurement
+        mBestReading = bestLastKnownLocation(MIN_LAST_READ_ACCURACY, ONE_MIN);
+
+        // Display last reading information
+        if (null != mBestReading) {
+            updateDisplay(mBestReading);
+        } else {
+            mAccuracyView.setText("No Initial Reading Available");
+        }
+
+        mLocationListener = new LocationListener() {
+
+            public void onLocationChanged(Location location) {
+
+                ensureColor();
+
+                if (null == mBestReading
+                        || location.getAccuracy() < mBestReading.getAccuracy()) {
+
+                    // Update best estimate
+                    mBestReading = location;
+
+                    // Update display
+                    updateDisplay(location);
+
+                    if (mBestReading.getAccuracy() < MIN_ACCURACY)
+                        //noinspection ResourceType
+                        mLocationManager.removeUpdates(mLocationListener);
+                }
+            }
+
+            public void onStatusChanged(String provider, int status,Bundle extras) {}
+            public void onProviderEnabled(String provider) {}
+            public void onProviderDisabled(String provider) {}
+        };
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            // Update the value of mRequestingLocationUpdates from the Bundle, and
-            // make sure that the Start Updates and Stop Updates buttons are
-            // correctly enabled or disabled.
-            if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
-                mRequestingLocationUpdates = savedInstanceState.getBoolean(REQUESTING_LOCATION_UPDATES_KEY);
-                setButtonsEnabledState();
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Determine whether initial reading is
+        // "good enough". If not, register for
+        // further location updates
+
+        if (null == mBestReading || mBestReading.getAccuracy() > MIN_LAST_READ_ACCURACY
+                                 || mBestReading.getTime() < System.currentTimeMillis() - TWO_MIN) {
+
+            // Register for network location updates
+            if (null != mLocationManager
+                    .getProvider(LocationManager.NETWORK_PROVIDER)) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mLocationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER, POLLING_FREQ,
+                        MIN_DISTANCE, mLocationListener);
             }
 
-            // Update the value of mCurrentLocation from the Bundle and update the
-            // UI to show the correct latitude and longitude.
-            if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
-                mCurrentLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+            // Register for GPS location updates
+            if (null != mLocationManager
+                    .getProvider(LocationManager.GPS_PROVIDER)) {
+                mLocationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, POLLING_FREQ,
+                        MIN_DISTANCE, mLocationListener);
             }
 
-            // Update the value of mLastUpdateTime from the Bundle and update the UI.
-            if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
-                mLastUpdateTime = savedInstanceState.getString(LAST_UPDATED_TIME_STRING_KEY);
-            }
-            updateUI();
+            // Schedule a runnable to unregister location listeners
+            Executors.newScheduledThreadPool(1).schedule(new Runnable() {
+                @Override
+                public void run() {
+                    //noinspection ResourceType
+                    mLocationManager.removeUpdates(mLocationListener);
+                }
+            }, MEASURE_TIME, TimeUnit.MILLISECONDS);
         }
     }
 
-    private void setButtonsEnabledState() {
-    }
-
-    protected void startIntentService() {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATION_DATA_EXTRA, mLastLocation);
-        startService(intent);
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    protected void createLocationRequest() {
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY,mRequestingLocationUpdates);
-        savedInstanceState.putParcelable(LOCATION_KEY, mCurrentLocation);
-        savedInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-    @Override
-    public void onConnected(Bundle bundle) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            mLatitudeText.setText(String.valueOf(mLastLocation.getLatitude()));
-            mLongitudeText.setText(String.valueOf(mLastLocation.getLongitude()));
-        }
-        if (mRequestingLocationUpdates)
-            startLocationUpdates();
-    }
-
-    protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mCurrentLocation = location;
-        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        updateUI();
-    }   
-    
-    private void updateUI() {
-        mLatitudeTextView.setText(String.valueOf(mCurrentLocation.getLatitude()));
-        mLongitudeTextView.setText(String.valueOf(mCurrentLocation.getLongitude()));
-        mLastUpdateTimeTextView.setText(mLastUpdateTime);
-    }
+    // Unregister location listeners
     @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
-    }
-
-    protected void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mGoogleApiClient.isConnected() && !mRequestingLocationUpdates)
-            startLocationUpdates();
-    }
-    
-    class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        mLocationManager.removeUpdates(mLocationListener);
 
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
+    }
 
-            // Display the address string
-            // or an error message sent from the intent service.
-            mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+    private Location bestLastKnownLocation(float minAccuracy, long maxAge) {
 
-            // Show a toast message if an address was found.
-            if (resultCode == Constants.SUCCESS_RESULT) {
-                Toast.makeText(LocationActivity.this, mAddressOutput, Toast.LENGTH_SHORT).show();
+        Location bestResult = null;
+        float bestAccuracy = Float.MAX_VALUE;
+        long bestAge = Long.MIN_VALUE;
+
+        List<String> matchingProviders = mLocationManager.getAllProviders();
+
+        for (String provider : matchingProviders) {
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return null;
+            }
+
+            Location location = mLocationManager.getLastKnownLocation(provider);
+
+            if (location != null) {
+                float accuracy = location.getAccuracy();
+                long time = location.getTime();
+
+                if (accuracy < bestAccuracy) {
+                    bestResult = location;
+                    bestAccuracy = accuracy;
+                    bestAge = time;
+                }
             }
         }
+
+        // Return best reading or null
+        if (bestAccuracy > minAccuracy || (System.currentTimeMillis() - bestAge) > maxAge) {
+            return null;
+        } else {
+            return bestResult;
+        }
+    }
+
+    // Update display
+    private void updateDisplay(Location location) {
+        double Lat  = location.getLatitude(),
+               Long = location.getLongitude();
+        mAccuracyView.setText("Accuracy:" + location.getAccuracy());
+        mTimeView.setText("Time:"+ new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.getDefault()).format(new Date(location.getTime())));
+        mLngView.setText("Longitude:" + Long);
+        mLatView.setText("Latitude:" + Lat);
+
+        Intent i = new Intent();
+        i.putExtra("LAT", Lat);
+        i.putExtra("LONG",Long);
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    private void ensureColor() {
+        if (mFirstUpdate) {
+            setTextViewColor(mTextViewColor);
+            mFirstUpdate = false;
+        }
+    }
+
+    private void setTextViewColor(int color) {
+        mAccuracyView.setTextColor(color);
+        mTimeView.setTextColor(color);
+        mLatView.setTextColor(color);
+        mLngView.setTextColor(color);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        client.connect();
+        Action viewAction = Action.newAction(Action.TYPE_VIEW,"Location Page",Uri.parse("http://host/path"),Uri.parse("android-app://com.example.cristian.mywallet/http/host/path"));
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Action viewAction = Action.newAction(Action.TYPE_VIEW,"Location Page",Uri.parse("http://host/path"),Uri.parse("android-app://com.example.cristian.mywallet/http/host/path"));
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

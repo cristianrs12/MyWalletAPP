@@ -81,10 +81,12 @@ public class GastosActivity extends AppCompatActivity {
         double presupuesto=0;
         double disponible=0;
         Cursor prep;
+
         prep=dbAdapter.getCursorPrep();
         Constants.presupuesto=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_PRESUPUESTO));
         Constants.disponible=prep.getDouble(prep.getColumnIndex(WalletDBAdapter.C_DISPONIBLE));
         presupuesto=Constants.presupuesto;
+
         if(presupuesto==0){
             Log.e("SIN RESULTADOS", "EL CURSOR NO HA OBTENIDO RESULTADOS");
             Intent i = new Intent(GastosActivity.this, PrepActivity.class);
@@ -125,10 +127,6 @@ public class GastosActivity extends AppCompatActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-
-    //    searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-    //    SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-    //    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }
