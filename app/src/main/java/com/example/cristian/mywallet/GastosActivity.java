@@ -161,12 +161,6 @@ public class GastosActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // RESULT_OK result code and a recognized request code
-        if(requestCode == GET_TEXT_REQUEST_CODE){
-            if(resultCode == RESULT_OK){
-                Toast.makeText(getBaseContext(), "Activity OnResult captada", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     @Override

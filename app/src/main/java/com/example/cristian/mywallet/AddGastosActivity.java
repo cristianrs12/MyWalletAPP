@@ -53,7 +53,7 @@ public class AddGastosActivity extends AppCompatActivity {
     private static final float MIN_LAST_READ_ACCURACY = 500.0f;
     private static final float MIN_DISTANCE = 10.0f;
 
-    private LatLng latlng = new LatLng(0,0);
+    private LatLng latlng = null;
 
     // Views for display location information
     private TextView mActualLocation;
@@ -158,6 +158,8 @@ public class AddGastosActivity extends AppCompatActivity {
     }
 
     private void DatosPorDefecto() {
+        latlng = new LatLng(0,0);
+
         List<String> lista = new ArrayList<>();
         lista.add("Comida");
         lista.add("Lujos");
@@ -166,7 +168,9 @@ public class AddGastosActivity extends AppCompatActivity {
         lista.add("Mensual");
         lista.add("Transporte");
         lista.add("Otros");
+
         ArrayAdapter<String> adaptador = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lista);
+
         adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adaptador);
     }
@@ -199,9 +203,9 @@ public class AddGastosActivity extends AppCompatActivity {
             reg.put(WalletDBAdapter.C_DESCRIPCION, descripcion);
             reg.put(WalletDBAdapter.C_CANTIDAD, cant);
 
-            if(latlng.latitude!=0&&latlng.longitude!=0){
-                reg.put(WalletDBAdapter.C_LOCALIZACION, latlng.latitude+","+latlng.longitude);
+            if(latlng != null){
 
+                reg.put(WalletDBAdapter.C_LOCALIZACION, latlng.latitude+","+latlng.longitude);
                 reg.put(WalletDBAdapter.C_CATEGORIA,categoria);
 
                 dbAdapter.insert(reg);
@@ -219,12 +223,12 @@ public class AddGastosActivity extends AppCompatActivity {
                 Intent i= new Intent();
                 setResult(RESULT_OK, i);
                 finish();
-            }else{
+            }/*else{
                 Toast.makeText(AddGastosActivity.this, "GPS necesario para nuevos gastos", Toast.LENGTH_SHORT).show();
                 Intent i= new Intent();
                 setResult(RESULT_CANCELED, i);
                 finish();
-            }
+            }*/
         }
     }
 
